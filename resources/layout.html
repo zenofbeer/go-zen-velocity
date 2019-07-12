@@ -1,8 +1,62 @@
 <head>
     <title>Velocity Tracker</title>
+    <style>
+        button.textButton {
+            background : none;
+            color : wheat
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            setupPage();
+            registerButtonClicks();
+        });
+
+        function setupPage() {
+            handleAdminClicks('');
+        }
+
+        function registerButtonClicks() {
+            $('#selectTeamButton').click(function(){
+                handleAdminClicks('selectTeamDiv');
+            });
+
+            $('#createTeamButton').click(function(){
+                handleAdminClicks('createTeamDiv');
+            });
+
+            $('#editTeamButton').click(function(){
+                handleAdminClicks('editTeamDiv');
+            });
+        }
+
+        function handleAdminClicks(adminTool) {
+            var adminTools = ['selectTeamDiv', 'createTeamDiv', 'editTeamDiv'];
+            for (var i = 0; i < adminTools.length; i++) {
+                if (adminTools[i] == adminTool) {
+                    $('#' + adminTools[i]).show();
+                } else {
+                    $('#' + adminTools[i]).hide();
+                }
+            }
+        }
+    </script>
 </head>
 <body>
-    Zen Velocity tracker is used to track your sprint team's velocity over time. It tracks sprint deliveries vs. performance, adjusts team velocity by availability, and generates a calculation to track productivity scores over time.
+    <h1>
+        Zen Velocity tracker is used to track your sprint team's velocity over time. It tracks sprint deliveries vs. performance, adjusts team velocity by availability, and generates a calculation to track productivity scores over time.
+    </h1>
+    <h2>
+        <button id="selectTeamButton" class="textButton">Select Team,</button>
+        <button id="createTeamButton" class="textButton">Create Team,</button>
+        <button id="editTeamButton" class="textButton"> or edit team.</button>
+    </h2>
+    <div id="options">
+        <div id="selectTeamDiv">Form to select existing team</div>
+        <div id="createTeamDiv">Form to add a new Team</div>
+        <div id="editTeamDiv">Form to edit an existing team</div>
+    </div>
     <h1>{{.PageTitle}}</h1>
     <ul>
         {{range .Todos}}
