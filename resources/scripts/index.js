@@ -30,10 +30,25 @@ resources.scripts.index = function() {
         $('#editWorkstreamButton').click(function() {
             handleAdminClicks('editWorkstreamDiv');
         });
+        $('#navigateToWorkstreamHome').click(function() {
+            navigateToWorkstreamHome();
+        });
+    },
+    navigateToWorkstreamHome = function() {
+        var displayNameVal = $('#WorkstreamAdminSelect option:selected').text();
+        var idVal = $('#WorkstreamAdminSelect option:selected').attr('id');
+        if (idVal == -1) {
+            alert("Please select a workstream from the list");
+        } else {
+            $.post('velocity/workstreamHome',{
+                displayName : displayNameVal,
+                id : idVal
+            });
+        }
     },
     getWorkstreamSelectionList = function() {
         $.ajax({
-            url:'receive/workstreamNames',
+            url:'velocity/workstreamNames',
             type:'POST',
             dataType:'JSON',
             data:{ajaxpostdata:'hello'},

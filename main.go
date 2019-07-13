@@ -43,7 +43,8 @@ func newRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/velocity", handler).Methods("GET")
-	r.HandleFunc("/receive/workstreamNames", getWorkstreamNameList).Methods("POST")
+	r.HandleFunc("/velocity/workstreamNames", getWorkstreamNameList).Methods("POST")
+	r.HandleFunc("/velocity/workstreamHome", getWorkstreamHome).Methods("POST")
 
 	staticFileDirectory := http.Dir("./resources/")
 	staticFileHandler := http.StripPrefix("/resources/", http.FileServer(staticFileDirectory))
@@ -63,6 +64,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 	tmpl.Execute(w, data)
+}
+
+func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
+	postData := r.FormValue("displayName")
+	city := r.FormValue("id")
+	fmt.Println(postData)
+	fmt.Println(city)
 }
 
 // should be a get, but using a post as a sample for getting postData
