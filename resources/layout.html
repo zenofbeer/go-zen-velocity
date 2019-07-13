@@ -13,26 +13,45 @@
             registerButtonClicks();
         });
 
+        // hide the page elements that should be hidden on page load. 
         function setupPage() {
             handleAdminClicks('');
         }
 
+        // register the page button clicks
         function registerButtonClicks() {
-            $('#selectTeamButton').click(function(){
-                handleAdminClicks('selectTeamDiv');
+            $('#selectWorkstreamButton').click(function(){
+                getWorkstreamSelectionList();
+                handleAdminClicks('selectWorkstreamDiv');
             });
 
-            $('#createTeamButton').click(function(){
-                handleAdminClicks('createTeamDiv');
+            $('#createWorkstreamButton').click(function(){
+                handleAdminClicks('createWorkstreamDiv');
             });
 
-            $('#editTeamButton').click(function(){
-                handleAdminClicks('editTeamDiv');
+            $('#editWorkstreamButton').click(function(){
+                handleAdminClicks('editWorkstreamDiv');
+            });
+        }
+
+        function getWorkstreamSelectionList() {
+            $.ajax({
+                url:'receive/workstreamNames',
+                type:'POST',
+                dataType:'JSON',
+                data:{ajaxpostdata:'hello'},
+                success:function(response){
+                    console.log(JSON.stringify(response));
+                    $('#WorkstreamAdminSelect').empty();
+                    $.each(response.WorkstreamNames, function(i, workstream){
+                        $('#WorkstreamAdminSelect').append($('<option></option>').attr('id', workstream.ID).text(workstream.Name));
+                    });
+                }
             });
         }
 
         function handleAdminClicks(adminTool) {
-            var adminTools = ['selectTeamDiv', 'createTeamDiv', 'editTeamDiv'];
+            var adminTools = ['selectWorkstreamDiv', 'createWorkstreamDiv', 'editWorkstreamDiv'];
             for (var i = 0; i < adminTools.length; i++) {
                 if (adminTools[i] == adminTool) {
                     $('#' + adminTools[i]).show();
@@ -45,17 +64,22 @@
 </head>
 <body>
     <h1>
-        Zen Velocity tracker is used to track your sprint team's velocity over time. It tracks sprint deliveries vs. performance, adjusts team velocity by availability, and generates a calculation to track productivity scores over time.
+        Zen Velocity tracker is used to track your sprint Workstream's velocity over time. It tracks sprint deliveries vs. performance, adjusts Workstream velocity by availability, and generates a calculation to track productivity scores over time.
     </h1>
     <h2>
-        <button id="selectTeamButton" class="textButton">Select Team,</button>
-        <button id="createTeamButton" class="textButton">Create Team,</button>
-        <button id="editTeamButton" class="textButton"> or edit team.</button>
+        <button id="selectWorkstreamButton" class="textButton">Select Workstream,</button>
+        <button id="createWorkstreamButton" class="textButton">Create Workstream,</button>
+        <button id="editWorkstreamButton" class="textButton"> or edit Workstream.</button>
     </h2>
     <div id="options">
-        <div id="selectTeamDiv">Form to select existing team</div>
-        <div id="createTeamDiv">Form to add a new Team</div>
-        <div id="editTeamDiv">Form to edit an existing team</div>
+        <div id="selectWorkstreamDiv">
+            <h3>Select your Workstream to manage sprints.</h3>
+            <select id="WorkstreamAdminSelect" name="thebox" size="1"></select>
+            <button id='navigateToWorkstreamHome'>Go</button>
+            <div id='result'></div>
+        </div>
+        <div id="createWorkstreamDiv">Form to add a new Workstream</div>
+        <div id="editWorkstreamDiv">Form to edit an existing Workstream</div>
     </div>
     <h1>{{.PageTitle}}</h1>
     <ul>

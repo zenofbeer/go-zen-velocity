@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/zenofbeer/go-zen-velocity/controllers"
 )
 
 // Todo ...
@@ -19,6 +21,18 @@ type TodoPageData struct {
 	Todos     []Todo
 }
 
+// WorkstreamSelection ...
+type WorkstreamSelection struct {
+	ID   int
+	Name string
+}
+
+// WorkstreamSelectionList ...
+type WorkstreamSelectionList struct {
+	ListTitle   string
+	Workstreams []WorkstreamSelection
+}
+
 func main() {
 	r := newRouter()
 
@@ -29,6 +43,7 @@ func newRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/velocity", handler).Methods("GET")
+	r.HandleFunc("/receive/workstreamNames", handleAjax).Methods("POST")
 
 	staticFileDirectory := http.Dir("./resources/")
 	staticFileHandler := http.StripPrefix("/resources/", http.FileServer(staticFileDirectory))
@@ -48,4 +63,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 	tmpl.Execute(w, data)
+}
+
+func handleAjax(w http.ResponseWriter, r *http.Request) {
+	ajaxpostdata := r.FormValue("ajaxpostdata")
+	fmt.Println("Receive ajax post data string ", ajaxpostdata)
+
+	response, err := controllers.GetWorkstreamNames()
+	if err != nil {
+		fmt.Println(err.Error)
+	}
+
+	w.Header().Set("Content-type", "application/json")
+
+	w.Write(response)
 }
