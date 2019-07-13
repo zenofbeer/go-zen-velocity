@@ -5,32 +5,20 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/zenofbeer/go-zen-velocity/config"
+
+	"github.com/tkanos/gonfig"
+
 	"github.com/gorilla/mux"
 	"github.com/zenofbeer/go-zen-velocity/controllers"
 )
 
-// Todo ...
-type Todo struct {
-	Title string
-	Done  bool
-}
-
-// TodoPageData ...
-type TodoPageData struct {
-	PageTitle string
-	Todos     []Todo
-}
-
-// WorkstreamSelection ...
-type WorkstreamSelection struct {
-	ID   int
-	Name string
-}
-
-// WorkstreamSelectionList ...
-type WorkstreamSelectionList struct {
-	ListTitle   string
-	Workstreams []WorkstreamSelection
+// SiteTemplate contains the base site fields
+type SiteTemplate struct {
+	PageTitle  string
+	CSSPath    string
+	JqueryPath string
+	PageScript string
 }
 
 func main() {
@@ -54,15 +42,29 @@ func newRouter() *mux.Router {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("./resources/index.html"))
-	data := TodoPageData{
-		PageTitle: "My ToDo list",
-		Todos: []Todo{
-			{Title: "Task 1", Done: false},
-			{Title: "Task 2", Done: true},
-			{Title: "Task 3", Done: true},
-		},
+	config := config.Config{}
+	err := gonfig.GetConf("./config/config.json", &config)
+	if err != nil {
+		fmt.Println(err.Error)
 	}
+
+	tmpl := template.Must(template.ParseFiles("./resources/index.html"))
+	data := SiteTemplate{
+		PageTitle:  config.Page.Title,
+		CSSPath:    config.Page.CSSPath,
+		JqueryPath: config.Page.JqueryPath,
+		PageScript: "resources/scripts/index.js",
+	}
+	/*
+		data := TodoPageData{
+			PageTitle: "Velocity Tracker",
+			Todos: []Todo{
+				{Title: "Task 1", Done: false},
+				{Title: "Task 2", Done: true},
+				{Title: "Task 3", Done: true},
+			},
+		}
+	*/
 	tmpl.Execute(w, data)
 }
 
