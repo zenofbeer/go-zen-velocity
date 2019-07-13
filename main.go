@@ -43,7 +43,7 @@ func newRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/velocity", handler).Methods("GET")
-	r.HandleFunc("/receive/workstreamNames", handleAjax).Methods("POST")
+	r.HandleFunc("/receive/workstreamNames", getWorkstreamNameList).Methods("POST")
 
 	staticFileDirectory := http.Dir("./resources/")
 	staticFileHandler := http.StripPrefix("/resources/", http.FileServer(staticFileDirectory))
@@ -53,7 +53,7 @@ func newRouter() *mux.Router {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("./resources/layout.html"))
+	tmpl := template.Must(template.ParseFiles("./resources/index.html"))
 	data := TodoPageData{
 		PageTitle: "My ToDo list",
 		Todos: []Todo{
@@ -65,7 +65,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, data)
 }
 
-func handleAjax(w http.ResponseWriter, r *http.Request) {
+// should be a get, but using a post as a sample for getting postData
+func getWorkstreamNameList(w http.ResponseWriter, r *http.Request) {
 	ajaxpostdata := r.FormValue("ajaxpostdata")
 	fmt.Println("Receive ajax post data string ", ajaxpostdata)
 

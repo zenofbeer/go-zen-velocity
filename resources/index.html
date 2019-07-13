@@ -1,8 +1,43 @@
-<html>
-    <head>
-        <title>Hello World!</title>
-    </head>
-    <body>
-        <h1>Hello World!x</h1>
-    </body>
-</html>
+<head>
+    <title>Velocity Tracker</title>
+    <style>
+        button.textButton {
+            background : none;
+            color : wheat
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="resources/scripts/index.js">
+    </script>
+</head>
+<body id="index">
+    <h1>
+        Zen Velocity tracker is used to track your sprint Workstream's velocity over time. It tracks sprint deliveries vs. performance, adjusts Workstream velocity by availability, and generates a calculation to track productivity scores over time.
+    </h1>
+    <h2>
+        <button id="selectWorkstreamButton" class="textButton">Select Workstream,</button>
+        <button id="createWorkstreamButton" class="textButton">Create Workstream,</button>
+        <button id="editWorkstreamButton" class="textButton"> or edit Workstream.</button>
+    </h2>
+
+    <!--Navigate to the workstream sprint manager page-->
+    <div id="options">
+        <div id="selectWorkstreamDiv">
+            <h3>Select your Workstream to manage sprints.</h3>
+            <select id="WorkstreamAdminSelect" name="thebox" size="1"></select>
+            <button id='navigateToWorkstreamHome'>Go</button>
+        </div>
+        <div id="createWorkstreamDiv">Form to add a new Workstream</div>
+        <div id="editWorkstreamDiv">Form to edit an existing Workstream</div>
+    </div>
+    <h1>{{.PageTitle}}</h1>
+    <ul>
+        {{range .Todos}}
+            {{if .Done}}
+                <li class="done">{{.Title}}</li>
+            {{else}}
+                <li>{{.Title}}</li>
+            {{end}}
+        {{end}}     
+    </ul>
+</body>
