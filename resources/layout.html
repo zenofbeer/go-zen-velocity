@@ -41,7 +41,7 @@
                 dataType:'JSON',
                 data:{ajaxpostdata:'hello'},
                 success:function(response){
-                    console.log(JSON.stringify(response));
+                    // console.log(JSON.stringify(response));
                     $('#WorkstreamAdminSelect').empty();
                     $.each(response.WorkstreamNames, function(i, workstream){
                         $('#WorkstreamAdminSelect').append($('<option></option>').attr('id', workstream.ID).text(workstream.Name));

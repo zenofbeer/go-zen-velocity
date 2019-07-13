@@ -1,6 +1,6 @@
 package controllers
 
-import "encoding/json"
+import "github.com/zenofbeer/go-zen-velocity/data"
 
 // WorkstreamName the workstream Name and ID
 type WorkstreamName struct {
@@ -17,30 +17,5 @@ type WorkstreamNameList struct {
 // GetWorkstreamNames return a json object containing
 // workstream names and IDs
 func GetWorkstreamNames() ([]byte, error) {
-	data := WorkstreamNameList{
-		ListTitle: "The list title",
-		WorkstreamNames: []WorkstreamName{
-			{
-				ID:   -1,
-				Name: "Select a workstream",
-			},
-			{
-				ID:   0,
-				Name: "Air Cancel",
-			},
-			{
-				ID:   1,
-				Name: "Air Schedule Change",
-			},
-			{
-				ID:   2,
-				Name: "Shopping",
-			},
-		},
-	}
-	dataJSON, err := json.Marshal(data)
-	if err != nil {
-		return nil, err
-	}
-	return dataJSON, nil
+	return data.GetWorkstreamNames()
 }
