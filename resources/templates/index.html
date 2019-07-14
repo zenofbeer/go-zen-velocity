@@ -1,0 +1,25 @@
+{{define "content"}}
+        <div>
+            <h1>
+                Zen Velocity Tracker is used to track your sprint Workstream's velocity over time. 
+                It tracks sprint deliveries vs. performance, adjusts Workstream velocity by availability,
+                and generates a calculation to track productivity scores over time.
+            </h1>
+            <h2>
+                <button id="selectWorkstreamButton" class="textButton">Select Workstream,</button>
+                <button id="createWorkstreamButton" class="textButton">Create Workstream,</button>
+                <button id="editWorkstreamButton" class="textButton"> or edit Workstream.</button>
+            </h2>
+
+            <!--Navigate to the workstream sprint manager page-->
+            <div id="options">
+                <div id="selectWorkstreamDiv">
+                    <h3>Select your workstream to manage sprints.</h3>
+                    <select id="WorkstreamAdminSelect" name="thebox" size="1"></select>
+                    <button id="navigateToWorkstreamHome">Go</button>
+                </div>
+                <div id="createWorkstreamDiv">Form to add a new workstream</div>
+                <div id="editWorkstreamDiv">Form to edit an existing workstream</div>
+            </div>
+        </div>     
+{{end}}

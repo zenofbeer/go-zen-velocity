@@ -1,0 +1,10 @@
+{{define "layout"}}
+<html>
+    <head>
+        {{template "header" .}}
+    </head>
+    <body id="{{.PageID}}">
+        {{template "content" .}}
+    </body>
+</html>
+{{end}}

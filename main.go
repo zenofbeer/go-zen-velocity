@@ -5,11 +5,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/zenofbeer/go-zen-velocity/config"
-
-	"github.com/tkanos/gonfig"
-
 	"github.com/gorilla/mux"
+	"github.com/zenofbeer/go-zen-velocity/configuration"
 	"github.com/zenofbeer/go-zen-velocity/controllers"
 )
 
@@ -18,8 +15,11 @@ type SiteTemplate struct {
 	PageTitle  string
 	CSSPath    string
 	JqueryPath string
+	PageID     string
 	PageScript string
 }
+
+var config = configuration.GetConfig()
 
 func main() {
 	r := newRouter()
@@ -32,7 +32,7 @@ func newRouter() *mux.Router {
 
 	r.HandleFunc("/velocity", handler).Methods("GET")
 	r.HandleFunc("/velocity/workstreamNames", getWorkstreamNameList).Methods("POST")
-	r.HandleFunc("/velocity/workstreamHome", getWorkstreamHome).Methods("POST")
+	r.HandleFunc("/velocity/workstreamHome", getWorkstreamHome).Methods("GET")
 
 	staticFileDirectory := http.Dir("./resources/")
 	staticFileHandler := http.StripPrefix("/resources/", http.FileServer(staticFileDirectory))
@@ -42,40 +42,42 @@ func newRouter() *mux.Router {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	config := config.Config{}
-	err := gonfig.GetConf("./config/config.json", &config)
-	if err != nil {
-		fmt.Println(err.Error)
-	}
+	templates := template.Must(
+		template.ParseFiles(
+			"./resources/templates/layout.html",
+			"./resources/templates/head.html",
+			"./resources/templates/index.html"))
 
-	tmpl := template.Must(template.ParseFiles("./resources/index.html"))
 	data := SiteTemplate{
 		PageTitle:  config.Page.Title,
 		CSSPath:    config.Page.CSSPath,
 		JqueryPath: config.Page.JqueryPath,
+		PageID:     "index",
 		PageScript: "resources/scripts/index.js",
 	}
-	/*
-		data := TodoPageData{
-			PageTitle: "Velocity Tracker",
-			Todos: []Todo{
-				{Title: "Task 1", Done: false},
-				{Title: "Task 2", Done: true},
-				{Title: "Task 3", Done: true},
-			},
-		}
-	*/
-	tmpl.Execute(w, data)
+	templates.ExecuteTemplate(w, "layout", data)
 }
 
 func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
-	postData := r.FormValue("displayName")
-	city := r.FormValue("id")
-	fmt.Println(postData)
-	fmt.Println(city)
+	templates := template.Must(
+		template.ParseFiles(
+			"./resources/templates/layout.html",
+			"./resources/templates/head.html",
+			"./resources/templates/workstream.html"))
+
+	data := SiteTemplate{
+		PageTitle:  config.Page.Title,
+		CSSPath:    config.Page.CSSPath,
+		JqueryPath: config.Page.JqueryPath,
+		PageID:     "workstreamHome",
+		PageScript: "resources/scripts/index.js",
+	}
+
+	fmt.Println(r.FormValue("displayName"))
+
+	templates.ExecuteTemplate(w, "layout", data)
 }
 
-// should be a get, but using a post as a sample for getting postData
 func getWorkstreamNameList(w http.ResponseWriter, r *http.Request) {
 	ajaxpostdata := r.FormValue("ajaxpostdata")
 	fmt.Println("Receive ajax post data string ", ajaxpostdata)

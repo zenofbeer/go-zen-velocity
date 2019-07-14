@@ -40,10 +40,11 @@ resources.scripts.index = function() {
         if (idVal == -1) {
             alert("Please select a workstream from the list");
         } else {
-            $.post('velocity/workstreamHome',{
+            $.get('velocity/workstreamHome',{
                 displayName : displayNameVal,
                 id : idVal
             });
+            window.location.replace("velocity/workstreamHome");
         }
     },
     getWorkstreamSelectionList = function() {
