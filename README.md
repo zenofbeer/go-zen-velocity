@@ -1,2 +1,7 @@
 # go-zen-velocity
-## Written in golang because, well, because. Allows easy velocity and performance tracking sprint over sprint and provides a high level view of productivity trending over time. 
+## Written in go, provides a simple interface for
+- Creating workstream teams
+- Creating sprints
+- Adding team members to sprints
+- Tracking velocity at an individual and team level over time
+- No spreadsheets requiring manual page creation or breaking formulas
