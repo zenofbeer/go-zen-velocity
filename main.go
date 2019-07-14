@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/zenofbeer/go-zen-velocity/configuration"
@@ -19,6 +20,12 @@ type SiteTemplate struct {
 	PageScript string
 }
 
+// WorkstreamViewModel loads the data for the workstream home page
+type WorkstreamViewModel struct {
+	SiteTemplate
+	WorkstreamName string
+}
+
 var config = configuration.GetConfig()
 
 func main() {
@@ -32,7 +39,7 @@ func newRouter() *mux.Router {
 
 	r.HandleFunc("/velocity", handler).Methods("GET")
 	r.HandleFunc("/velocity/workstreamNames", getWorkstreamNameList).Methods("POST")
-	r.HandleFunc("/velocity/workstreamHome", getWorkstreamHome).Methods("GET")
+	r.HandleFunc("/velocity/workstreamHome/{id:[0-9]+}", getWorkstreamHome).Methods("GET")
 
 	staticFileDirectory := http.Dir("./resources/")
 	staticFileHandler := http.StripPrefix("/resources/", http.FileServer(staticFileDirectory))
@@ -65,7 +72,12 @@ func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
 			"./resources/templates/head.html",
 			"./resources/templates/workstream.html"))
 
-	data := SiteTemplate{
+	params := mux.Vars(r)
+	stringID := params["id"]
+	workstreamID, _ := strconv.Atoi(stringID)
+	displayName := controllers.GetWorkstreamName(workstreamID)
+
+	siteTemplate := SiteTemplate{
 		PageTitle:  config.Page.Title,
 		CSSPath:    config.Page.CSSPath,
 		JqueryPath: config.Page.JqueryPath,
@@ -73,7 +85,10 @@ func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
 		PageScript: "resources/scripts/index.js",
 	}
 
-	fmt.Println(r.FormValue("displayName"))
+	data := WorkstreamViewModel{
+		SiteTemplate:   siteTemplate,
+		WorkstreamName: displayName,
+	}
 
 	templates.ExecuteTemplate(w, "layout", data)
 }

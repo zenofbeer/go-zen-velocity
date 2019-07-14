@@ -1,7 +1,62 @@
 {{define "content"}}
 <div>
     <h1>
-        "Hello Workstream Home!"
+        {{.WorkstreamName}}
     </h1>
+    <div id="workstream-overview">
+        <table>
+            <tr>
+                <th>Sprint</th>
+                <th>2019.06.20</th>
+                <th>2019.07.04</th>
+                <th>2019.07.17</th>
+            </tr>
+            <tr>
+                <td>Working Days</td>
+                <td>34</td>
+                <td>30</td>
+                <td>35</td>
+            </tr>
+            <tr>
+                <td>Points Committed</td>
+                <td>26</td>
+                <td>22</td>
+                <td>27</td>
+            </tr>
+            <tr>
+                <td>Points Achieved</td>
+                <td>13</td>
+                <td>0</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>Percentage of Target Achieved</td>
+                <td>50.00%</td>
+                <td>0.00%</td>
+                <td>52.00%</td>
+            </tr>
+            <tr>
+                <td>Productivity</td>
+                <td>n/a</td>
+                <td>0.00%</td>
+                <td>1.00%</td>
+            </tr>
+            <tr>
+                <td>Productivity Change</td>
+                <td>n/a</td>
+                <td>-38.24%</td>
+                <td>-37.00%</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <ul>
+            <li>on page load display proper workstream team</li>
+            <li>Select sprint from a dropdown</li>
+            <li>display data trends on landing page</li>
+            <li>edit sprint</li>
+            <li>add sprint</li>
+        </ul>
+    </div>
 </div>
 {{end}}
