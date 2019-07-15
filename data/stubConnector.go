@@ -1,7 +1,5 @@
 package data
 
-import "encoding/json"
-
 // WorkstreamName the workstream name and ID
 type WorkstreamName struct {
 	ID   int
@@ -41,34 +39,7 @@ type WorkstreamNameList struct {
 // GetWorkstreamNames return a json object containing
 // workstream names and IDs
 func GetWorkstreamNames() ([]byte, error) {
-	data := WorkstreamNameList{
-		ListTitle: "The list title",
-		WorkstreamNames: []WorkstreamName{
-			{
-				ID:   -1,
-				Name: getWorkstreamNameByID(-1),
-			},
-			{
-				ID:   0,
-				Name: getWorkstreamNameByID(0),
-			},
-			{
-				ID:   1,
-				Name: getWorkstreamNameByID(1),
-			},
-			{
-				ID:   2,
-				Name: getWorkstreamNameByID(2),
-			},
-		},
-	}
-
-	dataJSON, err := json.Marshal(data)
-	if err != nil {
-		return nil, err
-	}
-
-	return dataJSON, nil
+	return getAllWorkstreamNames(), nil
 }
 
 // GetWorkstreamName get name by id

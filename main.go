@@ -7,11 +7,8 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/zenofbeer/go-zen-velocity/configuration"
 	"github.com/zenofbeer/go-zen-velocity/controllers"
 )
-
-var config = configuration.GetConfig()
 
 func main() {
 	r := newRouter()
@@ -70,7 +67,7 @@ func getWorkstreamNameList(w http.ResponseWriter, r *http.Request) {
 
 	response, err := controllers.GetworkstreamNames()
 	if err != nil {
-		fmt.Println(err.Error)
+		fmt.Println(err)
 	}
 
 	w.Header().Set("Content-type", "application/json")
