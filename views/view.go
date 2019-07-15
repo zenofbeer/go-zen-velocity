@@ -33,3 +33,15 @@ type WorkstreamViewModel struct {
 	DisplayName string
 	Overview    data.WorkstreamOverview
 }
+
+// WorkstreamName Model for displaying workstream names in dropdown lists
+type WorkstreamName struct {
+	ID   int
+	Name string
+}
+
+// WorkstreamNameList Model for displaying workstream names list in a dropdown list
+type WorkstreamNameList struct {
+	ListTitle       string
+	WorkstreamNames []WorkstreamName
+}

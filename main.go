@@ -6,28 +6,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/zenofbeer/go-zen-velocity/data"
-
 	"github.com/gorilla/mux"
 	"github.com/zenofbeer/go-zen-velocity/configuration"
 	"github.com/zenofbeer/go-zen-velocity/controllers"
 )
-
-// SiteTemplate contains the base site fields
-type SiteTemplate struct {
-	PageTitle  string
-	CSSPath    string
-	JqueryPath string
-	PageID     string
-	PageScript string
-}
-
-// WorkstreamViewModelOld loads the data for the workstream home page
-type WorkstreamViewModelOld struct {
-	SiteTemplate
-	WorkstreamName string
-	Overview       data.WorkstreamOverview
-}
 
 var config = configuration.GetConfig()
 
@@ -77,21 +59,6 @@ func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	stringID := params["id"]
 	workstreamID, _ := strconv.Atoi(stringID)
-	//displayName := controllers.GetWorkstreamName(workstreamID)
-
-	/* siteTemplate := SiteTemplate{
-		PageTitle:  config.App.Title,
-		CSSPath:    config.App.CSSPath,
-		JqueryPath: config.App.JqueryPath,
-		PageID:     "workstreamHome",
-		PageScript: "resources/scripts/index.js",
-	}
-
-	data := WorkstreamViewModel{
-		SiteTemplate:   siteTemplate,
-		WorkstreamName: displayName,
-		Overview:       controllers.GetWorkstreamOverview(workstreamID),
-	} */
 
 	data := controllers.GetWorkstreamViewModel(workstreamID)
 	templates.ExecuteTemplate(w, "layout", data)
@@ -101,7 +68,7 @@ func getWorkstreamNameList(w http.ResponseWriter, r *http.Request) {
 	ajaxpostdata := r.FormValue("ajaxpostdata")
 	fmt.Println("Receive ajax post data string ", ajaxpostdata)
 
-	response, err := controllers.GetWorkstreamNames()
+	response, err := controllers.GetworkstreamNames()
 	if err != nil {
 		fmt.Println(err.Error)
 	}

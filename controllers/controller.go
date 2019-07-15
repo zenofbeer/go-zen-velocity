@@ -30,6 +30,12 @@ func GetWorkstreamViewModel(ID int) views.WorkstreamViewModel {
 	return retVal
 }
 
+// GetworkstreamNames return a json object containing workstream
+// names and IDs
+func GetworkstreamNames() ([]byte, error) {
+	return data.GetWorkstreamNames()
+}
+
 func getHeadViewModel() views.HeadViewModel {
 	retVal := views.HeadViewModel{
 		PageTitle:  config.App.Title,
