@@ -1,5 +1,5 @@
 {
-    "Page" : {
+    "App" : {
         "Title" : "Velocity Tracker",
         "CSSPath" : "/resources/styles/site.css",
         "JqueryPath" : "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"

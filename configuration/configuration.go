@@ -8,11 +8,11 @@ import (
 
 // Config global config settings
 type Config struct {
-	Page PageSettings
+	App AppSettings
 }
 
-// PageSettings settings for each page
-type PageSettings struct {
+// AppSettings settings for each page
+type AppSettings struct {
 	Title      string
 	CSSPath    string
 	JqueryPath string

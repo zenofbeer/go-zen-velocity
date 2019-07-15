@@ -59,9 +59,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			"./resources/templates/index.html"))
 
 	data := SiteTemplate{
-		PageTitle:  config.Page.Title,
-		CSSPath:    config.Page.CSSPath,
-		JqueryPath: config.Page.JqueryPath,
+		PageTitle:  config.App.Title,
+		CSSPath:    config.App.CSSPath,
+		JqueryPath: config.App.JqueryPath,
 		PageID:     "index",
 		PageScript: "resources/scripts/index.js",
 	}
@@ -81,9 +81,9 @@ func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
 	displayName := controllers.GetWorkstreamName(workstreamID)
 
 	siteTemplate := SiteTemplate{
-		PageTitle:  config.Page.Title,
-		CSSPath:    config.Page.CSSPath,
-		JqueryPath: config.Page.JqueryPath,
+		PageTitle:  config.App.Title,
+		CSSPath:    config.App.CSSPath,
+		JqueryPath: config.App.JqueryPath,
 		PageID:     "workstreamHome",
 		PageScript: "resources/scripts/index.js",
 	}
