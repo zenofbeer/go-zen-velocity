@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/zenofbeer/go-zen-velocity/configuration"
 	// need to force import
@@ -12,15 +13,16 @@ import (
 
 var config = configuration.GetConfig()
 
+const workstreamNamesTable string = "workstreamnames"
+
 func getAllWorkstreamNames() []byte {
 	buildDatabase()
-	fmt.Println("database built")
 	initDatabaseAndSeed()
 	db := getDatabase()
 
-	rowCount, _ := db.Query("SELECT COUNT(*) as count FROM  workstreamnames")
+	rowCount, _ := db.Query(getCountQuery(workstreamNamesTable))
 	nameCount := checkCount(rowCount)
-	rows, _ := db.Query("SELECT id, name FROM workstreamnames")
+	rows, _ := db.Query(getSelectAllQuery(workstreamNamesTable))
 	var myID int
 	var name string
 
@@ -48,6 +50,19 @@ func getAllWorkstreamNames() []byte {
 	return dataJSON
 }
 
+func getWorkstreamNameByID(ID int) string {
+	db := getDatabase()
+	// SELECT * FROM Product ORDER BY _ID DESC LIMIT 1
+	row, _ := db.Query("SELECT name FROM " + workstreamNamesTable + " WHERE id=" + strconv.Itoa(ID) + " ORDER BY id DESC LIMIT 1")
+	var name string
+	for row.Next() {
+		row.Scan(&name)
+	}
+	row.Close()
+	db.Close()
+	return name
+}
+
 func checkCount(rows *sql.Rows) (count int) {
 	for rows.Next() {
 		err := rows.Scan(&count)
@@ -59,6 +74,7 @@ func checkCount(rows *sql.Rows) (count int) {
 }
 
 func getDatabase() *sql.DB {
+
 	db, err := sql.Open("sqlite3", "vt.db")
 	if err != nil {
 		fmt.Println(err)

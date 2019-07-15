@@ -52,20 +52,6 @@ func GetWorkstreamOverview(ID int) WorkstreamOverview {
 	return getWorkstreamOverview(ID)
 }
 
-func getWorkstreamNameByID(ID int) string {
-	switch ID {
-	case -1:
-		return "Select a workstream"
-	case 0:
-		return "Workstream A"
-	case 1:
-		return "Workstream B"
-	case 2:
-		return "Workstream C"
-	}
-	return "Workstream not found"
-}
-
 func getWorkstreamOverview(ID int) WorkstreamOverview {
 	summary := []SprintSummary{
 		SprintSummary{
