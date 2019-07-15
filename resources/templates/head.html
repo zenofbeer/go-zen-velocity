@@ -1,7 +1,8 @@
 {{define "header"}}
+    {{with .Head}}
     <title>{{.PageTitle}}</title>
     <link rel="stylesheet" type="text/css" href="{{.CSSPath}}">
     <script src="{{.JqueryPath}}"></script>
-    <script src="{{.PageScript}}">
     </script>
+    {{end}}
 {{end}}    

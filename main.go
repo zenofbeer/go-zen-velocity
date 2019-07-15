@@ -22,8 +22,8 @@ type SiteTemplate struct {
 	PageScript string
 }
 
-// WorkstreamViewModel loads the data for the workstream home page
-type WorkstreamViewModel struct {
+// WorkstreamViewModelOld loads the data for the workstream home page
+type WorkstreamViewModelOld struct {
 	SiteTemplate
 	WorkstreamName string
 	Overview       data.WorkstreamOverview
@@ -56,16 +56,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		template.ParseFiles(
 			"./resources/templates/layout.html",
 			"./resources/templates/head.html",
+			"./resources/templates/foot.html",
 			"./resources/templates/index.html"))
 
-	data := SiteTemplate{
-		PageTitle:  config.App.Title,
-		CSSPath:    config.App.CSSPath,
-		JqueryPath: config.App.JqueryPath,
-		PageID:     "index",
-		PageScript: "resources/scripts/index.js",
+	data := controllers.GetHomeViewModel()
+	err := templates.ExecuteTemplate(w, "layout", data)
+	if err != nil {
+		fmt.Println(err)
 	}
-	templates.ExecuteTemplate(w, "layout", data)
 }
 
 func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
@@ -73,14 +71,15 @@ func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
 		template.ParseFiles(
 			"./resources/templates/layout.html",
 			"./resources/templates/head.html",
+			"./resources/templates/foot.html",
 			"./resources/templates/workstream.html"))
 
 	params := mux.Vars(r)
 	stringID := params["id"]
 	workstreamID, _ := strconv.Atoi(stringID)
-	displayName := controllers.GetWorkstreamName(workstreamID)
+	//displayName := controllers.GetWorkstreamName(workstreamID)
 
-	siteTemplate := SiteTemplate{
+	/* siteTemplate := SiteTemplate{
 		PageTitle:  config.App.Title,
 		CSSPath:    config.App.CSSPath,
 		JqueryPath: config.App.JqueryPath,
@@ -92,8 +91,9 @@ func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
 		SiteTemplate:   siteTemplate,
 		WorkstreamName: displayName,
 		Overview:       controllers.GetWorkstreamOverview(workstreamID),
-	}
+	} */
 
+	data := controllers.GetWorkstreamViewModel(workstreamID)
 	templates.ExecuteTemplate(w, "layout", data)
 }
 
