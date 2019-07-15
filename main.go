@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/zenofbeer/go-zen-velocity/data"
+
 	"github.com/gorilla/mux"
 	"github.com/zenofbeer/go-zen-velocity/configuration"
 	"github.com/zenofbeer/go-zen-velocity/controllers"
@@ -24,6 +26,7 @@ type SiteTemplate struct {
 type WorkstreamViewModel struct {
 	SiteTemplate
 	WorkstreamName string
+	Overview       data.WorkstreamOverview
 }
 
 var config = configuration.GetConfig()
@@ -88,6 +91,7 @@ func getWorkstreamHome(w http.ResponseWriter, r *http.Request) {
 	data := WorkstreamViewModel{
 		SiteTemplate:   siteTemplate,
 		WorkstreamName: displayName,
+		Overview:       controllers.GetWorkstreamOverview(workstreamID),
 	}
 
 	templates.ExecuteTemplate(w, "layout", data)

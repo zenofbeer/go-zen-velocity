@@ -1,14 +1,13 @@
 package controllers
 
+import "github.com/zenofbeer/go-zen-velocity/data"
+
 // GetWorkstreamName ...
 func GetWorkstreamName(ID int) string {
-	switch ID {
-	case 0:
-		return "Air Cancel"
-	case 1:
-		return "Air Schedule Change"
-	case 2:
-		return "Shopping"
-	}
-	return "Workstream Not Found"
+	return data.GetWorkstreamName(ID)
+}
+
+// GetWorkstreamOverview ...
+func GetWorkstreamOverview(ID int) data.WorkstreamOverview {
+	return data.GetWorkstreamOverview(ID)
 }
