@@ -49,39 +49,11 @@ func GetWorkstreamName(ID int) string {
 
 // GetWorkstreamOverview ...
 func GetWorkstreamOverview(ID int) WorkstreamOverview {
-	return getWorkstreamOverview(ID)
+	return getWorkstreamOverviewOld(ID)
 }
 
-func getWorkstreamOverview(ID int) WorkstreamOverview {
-	summary := []SprintSummary{
-		SprintSummary{
-			Name:                     "2019.06.20",
-			WorkingDays:              34,
-			PointsCommitted:          26,
-			PointsAchieved:           13,
-			TargetPercentageAchieved: 50.00,
-			Productivity:             0.00,
-			ProductivityChange:       0.00,
-		},
-		SprintSummary{
-			Name:                     "2019.07.04",
-			WorkingDays:              30,
-			PointsCommitted:          22,
-			PointsAchieved:           0,
-			TargetPercentageAchieved: 0.00,
-			Productivity:             0.00,
-			ProductivityChange:       -38.24,
-		},
-		SprintSummary{
-			Name:                     "2019.07.17",
-			WorkingDays:              35,
-			PointsCommitted:          27,
-			PointsAchieved:           20,
-			TargetPercentageAchieved: 52.00,
-			Productivity:             1.00,
-			ProductivityChange:       -37.00,
-		},
-	}
+func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
+	summary := getWorkstreamOverview(ID)
 	retVal := WorkstreamOverview{
 		NameTitle:                     "Sprint",
 		WorkingDaysTitle:              "Working Days",
