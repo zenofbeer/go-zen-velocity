@@ -81,6 +81,14 @@ func seedSprintSummaryTable(db *sql.DB) {
 	query.Exec(34, 26, 13)
 	query.Exec(30, 22, 0)
 	query.Exec(35, 27, 20)
+
+	query.Exec(37, 28, 15)
+	query.Exec(32, 21, 5)
+	query.Exec(40, 22, 15)
+
+	query.Exec(40, 23, 20)
+	query.Exec(35, 25, 15)
+	query.Exec(45, 30, 10)
 }
 
 func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {
@@ -89,4 +97,12 @@ func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {
 	query.Exec(1, 1, 1)
 	query.Exec(1, 2, 2)
 	query.Exec(1, 3, 3)
+
+	query.Exec(2, 1, 4)
+	query.Exec(2, 2, 5)
+	query.Exec(2, 3, 6)
+
+	query.Exec(3, 1, 7)
+	query.Exec(3, 2, 8)
+	query.Exec(3, 3, 9)
 }
