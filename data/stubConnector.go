@@ -1,5 +1,9 @@
 package data
 
+import (
+	"math"
+)
+
 // WorkstreamName the workstream name and ID
 type WorkstreamName struct {
 	ID   int
@@ -42,6 +46,25 @@ func GetWorkstreamOverview(ID int) WorkstreamOverview {
 
 func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 	summary := getWorkstreamOverview(ID)
+
+	for i := 0; i < len(summary); i++ {
+		pa := summary[i].PointsAchieved
+		pc := summary[i].PointsCommitted
+		wd := summary[i].WorkingDays
+		tpa := getFloatToTwo((float64(pa) / float64(pc)) * 100)
+		p := getFloatToTwo((float64(pa) / float64(wd)) * 100)
+
+		summary[i].TargetPercentageAchieved = tpa
+		summary[i].Productivity = p
+
+		if i > 0 {
+			tp := summary[i].Productivity
+			lp := summary[i-1].Productivity
+			pc := tp - lp
+			summary[i].ProductivityChange = getFloatToTwo(pc)
+		}
+	}
+
 	retVal := WorkstreamOverview{
 		NameTitle:                     "Sprint",
 		WorkingDaysTitle:              "Working Days",
@@ -53,4 +76,8 @@ func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 		SprintSummaries:               summary,
 	}
 	return retVal
+}
+
+func getFloatToTwo(rawNumber float64) float64 {
+	return math.Round(rawNumber*100) / 100
 }

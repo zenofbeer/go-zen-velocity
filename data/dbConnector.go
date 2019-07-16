@@ -20,9 +20,9 @@ type SprintSummary struct {
 	WorkingDays              int
 	PointsCommitted          int
 	PointsAchieved           int
-	TargetPercentageAchieved float32
-	Productivity             float32
-	ProductivityChange       float32
+	TargetPercentageAchieved float64
+	Productivity             float64
+	ProductivityChange       float64
 }
 
 const workstreamNameTable string = "WorkstreamName"
