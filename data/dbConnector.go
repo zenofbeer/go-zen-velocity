@@ -17,6 +17,8 @@ var config = configuration.GetConfig()
 // status for a sprint
 type SprintSummary struct {
 	Name                     string
+	WorkstreamID             int
+	SprintID                 int
 	WorkingDays              int
 	PointsCommitted          int
 	PointsAchieved           int
@@ -29,6 +31,7 @@ const workstreamNameTable string = "WorkstreamName"
 const sprintNameTable string = "SprintName"
 const sprintSummaryTable string = "SprintSummary"
 const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintName_sprintSummary_Map"
+const engineerDetailsTable string = "engineerDetails"
 
 func getAllWorkstreamNames() []byte {
 	dbBuilder(true)
@@ -83,7 +86,7 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	countQuery := fmt.Sprintf("SELECT COUNT(*) as count FROM %v WHERE workstreamId=%v", workstreamSprintNameSprintSummaryMapTable, ID)
 	count, _ := db.Query(countQuery)
 	queryString := fmt.Sprintf(
-		"SELECT %v.name, %v.workingDays, %v.pointsCommitted, %v.pointsAchieved "+
+		"SELECT %v.name, %v.id, %v.workingDays, %v.pointsCommitted, %v.pointsAchieved "+
 			"FROM %v "+
 			"INNER JOIN %v "+
 			"ON %v.workstreamId = %v "+
@@ -91,7 +94,7 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 			"ON %v.id = %v.sprintSummaryId "+
 			"AND %v.sprintNameId = %v.id "+
 			"AND %v.sprintSummaryId = %v.id",
-		sprintNameTable, sprintSummaryTable, sprintSummaryTable, sprintSummaryTable,
+		sprintNameTable, sprintNameTable, sprintSummaryTable, sprintSummaryTable, sprintSummaryTable,
 		sprintNameTable, workstreamSprintNameSprintSummaryMapTable,
 		workstreamSprintNameSprintSummaryMapTable, ID,
 		sprintSummaryTable,
@@ -106,15 +109,18 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	resultCount := checkCount(count)
 	summaries := make([]SprintSummary, resultCount)
 	var sprintName string
+	var sprintID int
 	var workingDays int
 	var pointsCommitted int
 	var pointsAchieved int
 	counter := 0
 
 	for results.Next() {
-		results.Scan(&sprintName, &workingDays, &pointsCommitted, &pointsAchieved)
+		results.Scan(&sprintName, &sprintID, &workingDays, &pointsCommitted, &pointsAchieved)
 		summaries[counter] = SprintSummary{
 			Name:            sprintName,
+			WorkstreamID:    ID,
+			SprintID:        sprintID,
 			WorkingDays:     workingDays,
 			PointsCommitted: pointsCommitted,
 			PointsAchieved:  pointsAchieved,

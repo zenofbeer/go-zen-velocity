@@ -12,6 +12,7 @@ func dbBuilder(seed bool) {
 	buildSprintNameTable(db, seed)
 	buildSprintSummaryTable(db, seed)
 	buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
+	buildEngineerDetailsTable(db, seed)
 
 	db.Close()
 }
@@ -56,6 +57,17 @@ func buildWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB, seed bool) {
 
 	if seed {
 		seedWorkstreamSprintNameSprintSummaryMapTable(db)
+	}
+}
+
+func buildEngineerDetailsTable(db *sql.DB, seed bool) {
+	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, UNIQUE(email))", engineerDetailsTable)
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec()
+
+	if seed {
+		seedEngineerDetailsTable(db)
 	}
 }
 
@@ -105,4 +117,22 @@ func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {
 	query.Exec(3, 1, 7)
 	query.Exec(3, 2, 8)
 	query.Exec(3, 3, 9)
+}
+
+func seedEngineerDetailsTable(db *sql.DB) {
+	queryString := fmt.Sprintf("INSERT INTO %v (firstName, lastName, email) VALUES (?, ?, ?)", engineerDetailsTable)
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec("Jessica", "Huang", "email@mail.com")
+	query.Exec("Sreeni", "Vasulu", "mail@mail.com")
+	query.Exec("Evan", "Lie", "mail@mail.com")
+	query.Exec("Suneetha", "Talasia", "mail@mail.com")
+	query.Exec("Dan", "MacDonald", "mail@mail.com")
+	query.Exec("Dhurka", "Something", "mail@mail.com")
+	query.Exec("Fan", "Yang", "mail@mail.com")
+	query.Exec("Guy", "Dude", "mail@mail.com")
+	query.Exec("Sourabh", "Suman", "mail@mail.com")
+	query.Exec("Shreya", "Khomani", "mail@mail.com")
+	query.Exec("OtherDev", "KantRemember", "mail@mail.com")
+	query.Exec("Last", "One", "mail@mail.com")
 }

@@ -9,7 +9,7 @@
                 {{with .Overview}}
                 <th>{{.NameTitle}}</th>
                 {{range .SprintSummaries}}
-                <th>{{.Name}}</th>
+                <th><a href="/velocity/workstreamHome/{{.WorkstreamID}}/sprint/{{.SprintID}}">{{.Name}}</a></th>
                 {{end}}
             </tr>
             <tr>
@@ -53,7 +53,6 @@
     </div>
     <div>
         <ul>
-            <li>on page load display proper workstream team</li>
             <li>Select sprint from a dropdown</li>
             <li>display data trends on landing page</li>
             <li>edit sprint</li>
