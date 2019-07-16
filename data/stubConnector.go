@@ -6,18 +6,6 @@ type WorkstreamName struct {
 	Name string
 }
 
-// SprintSummary returns the sprint activity and performance
-// status for a sprint
-type SprintSummary struct {
-	Name                     string
-	WorkingDays              int
-	PointsCommitted          int
-	PointsAchieved           int
-	TargetPercentageAchieved float32
-	Productivity             float32
-	ProductivityChange       float32
-}
-
 // WorkstreamOverview overview of the workstream
 type WorkstreamOverview struct {
 	NameTitle                     string

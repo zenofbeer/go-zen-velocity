@@ -13,6 +13,18 @@ import (
 
 var config = configuration.GetConfig()
 
+// SprintSummary returns the sprint activity and performance
+// status for a sprint
+type SprintSummary struct {
+	Name                     string
+	WorkingDays              int
+	PointsCommitted          int
+	PointsAchieved           int
+	TargetPercentageAchieved float32
+	Productivity             float32
+	ProductivityChange       float32
+}
+
 const workstreamNameTable string = "WorkstreamName"
 const sprintNameTable string = "SprintName"
 const sprintSummaryTable string = "SprintSummary"
@@ -21,10 +33,11 @@ const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintName_
 func getAllWorkstreamNames() []byte {
 	dbBuilder(true)
 	db := getDatabase()
-
-	rowCount, _ := db.Query(getCountQuery(workstreamNameTable))
+	rowCountQuery := fmt.Sprintf("SELECT COUNT(*) as count FROM %v", workstreamNameTable)
+	rowCount, _ := db.Query(rowCountQuery)
 	nameCount := checkCount(rowCount)
-	rows, _ := db.Query(getSelectAllQuery(workstreamNameTable))
+	query := fmt.Sprintf("SELECT * FROM %v", workstreamNameTable)
+	rows, _ := db.Query(query)
 	var myID int
 	var name string
 
@@ -65,12 +78,6 @@ func getWorkstreamNameByID(ID int) string {
 }
 
 func getWorkstreamOverview(ID int) []SprintSummary {
-
-	// get the map set by workstream ID, and sort by sprint name ID ascending
-	// join sprint name, workstream summary and build an array of SprintSummary
-	// Move SprintSummary into this file
-	// return array of SprintSummary
-
 	db := getDatabase()
 
 	countQuery := fmt.Sprintf("SELECT COUNT(*) as count FROM %v WHERE workstreamId=%v", workstreamSprintNameSprintSummaryMapTable, ID)
