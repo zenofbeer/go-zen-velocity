@@ -10,6 +10,7 @@ import (
 // Config global config settings
 type Config struct {
 	App              AppSettings
+	SprintSettings   Sprint
 	ConnectionString string
 	Home             HomeSettings
 	Workstream       WorkstreamSettings
@@ -20,6 +21,11 @@ type AppSettings struct {
 	Title      string
 	CSSPath    string
 	JqueryPath string
+}
+
+// Sprint sprint configuration settings
+type Sprint struct {
+	VelocityIncreaseGoalConstant int
 }
 
 // HomeSettings settings for the home page

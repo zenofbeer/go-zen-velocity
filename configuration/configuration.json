@@ -11,5 +11,8 @@
     "Workstream" : {
         "PageScript" : "/resources/scripts/workstream.js",
         "PageID" : "workstream"
+    },
+    "Sprint" : {
+        "VelocityIncreaseGoalConstant" : 5
     }
 }
