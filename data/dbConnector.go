@@ -36,11 +36,24 @@ type EngineerDetails struct {
 	Email     string
 }
 
+// SprintLineItem represents an engineer level line item in a sprint
+type SprintLineItem struct {
+	id                        int
+	CurrentAvailability       int
+	PreviousAvailability      int
+	Capacity                  int
+	TargetPoints              int
+	CommittedPointsThisSprint int
+	CompletedPointsThisSprint int
+	CompletedPointsLastSprint int
+}
+
 const workstreamNameTable string = "workstream_name"
 const sprintNameTable string = "sprint_name"
 const sprintSummaryTable string = "sprint_summary"
-const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintName_sprintSummary_Map"
+const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintname_sprintsummary_Map"
 const engineerDetailsTable string = "engineer_details"
+const sprintLineItemTable string = "sprint_line_item"
 
 func getAllWorkstreamNames() []byte {
 	dbBuilder(true)

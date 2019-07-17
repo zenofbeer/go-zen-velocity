@@ -13,6 +13,7 @@ func dbBuilder(seed bool) {
 	buildSprintSummaryTable(db, seed)
 	buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
 	buildEngineerDetailsTable(db, seed)
+	buildSprintLineItemTable(db, seed)
 
 	db.Close()
 }
@@ -73,6 +74,29 @@ func buildEngineerDetailsTable(db *sql.DB, seed bool) {
 
 	if seed {
 		seedEngineerDetailsTable(db)
+	}
+}
+
+func buildSprintLineItemTable(db *sql.DB, seed bool) {
+	queryString := fmt.Sprintf(
+		"CREATE TABLE IF NOT EXISTS %v "+
+			"(id INT(10) NOT NULL AUTO_INCREMENT, "+
+			"current_availability INT, "+
+			"previous_availability INT, "+
+			"capacity INT, "+
+			"target_points INT, "+
+			"committed_points_this_sprint INT, "+
+			"completed_points_this_sprint INT, "+
+			"completed_points_last_sprint INT, "+
+			"PRIMARY KEY (id))",
+		sprintLineItemTable)
+
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec()
+
+	if seed {
+		seedSprintLineItemTable(db)
 	}
 }
 
@@ -140,4 +164,34 @@ func seedEngineerDetailsTable(db *sql.DB) {
 	query.Exec("Dennis", "Stratton", "j@mail.com", 0)
 	query.Exec("Thunderstick", "Joe", "k@mail.com", 0)
 	query.Exec("Doug", "Sampson", "l@mail.com", 0)
+}
+
+func seedSprintLineItemTable(db *sql.DB) {
+	queryString := fmt.Sprintf(
+		`INSERT INTO %v (
+			current_availability, 
+			previous_availability, 
+			capacity, 
+			target_points, 
+			committed_points_this_sprint, 
+			completed_points_this_sprint, 
+			completed_points_last_sprint) VALUES(?,?,?,?,?,?,?)`,
+		sprintLineItemTable)
+
+	query, err := db.Prepare(queryString)
+	checkError(err)
+
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+	query.Exec(10, 10, 11, 10, 10, 10, 10)
+
 }
