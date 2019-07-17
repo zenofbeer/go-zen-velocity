@@ -28,6 +28,11 @@ type WorkstreamNameList struct {
 	WorkstreamNames []WorkstreamName
 }
 
+// AddWorkstreamName add a workstream
+func AddWorkstreamName(name string) {
+	addWorkstream(name)
+}
+
 // GetWorkstreamNames return a json object containing
 // workstream names and IDs
 func GetWorkstreamNames() ([]byte, error) {
@@ -42,6 +47,11 @@ func GetWorkstreamName(ID int) string {
 // GetWorkstreamOverview ...
 func GetWorkstreamOverview(ID int) WorkstreamOverview {
 	return getWorkstreamOverviewOld(ID)
+}
+
+// AddEngineerDetails add a new engineer. Velocity defaults to 0
+func AddEngineerDetails(firstName string, lastName string, emailAddress string) {
+	addEngineerDetails(firstName, lastName, emailAddress)
 }
 
 func getWorkstreamOverviewOld(ID int) WorkstreamOverview {

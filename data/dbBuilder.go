@@ -9,13 +9,14 @@ func dbBuilder(seed bool) {
 	db := getDatabase()
 
 	buildWorkstreamNameTable(db, seed)
-	buildSprintNameTable(db, seed)
-	buildSprintSummaryTable(db, seed)
-	buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
 	buildEngineerDetailsTable(db, seed)
-	buildSprintLineItemTable(db, seed)
-	buildWorkstreamSprintEngineerSprintLineItemMap(db, seed)
+	/*
+		buildSprintNameTable(db, seed)
+		buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
 
+		buildSprintLineItemTable(db, seed)
+		buildWorkstreamSprintEngineerSprintLineItemMap(db, seed)
+	*/
 	db.Close()
 }
 
@@ -23,13 +24,16 @@ func dbBuilder(seed bool) {
 
 func buildWorkstreamNameTable(db *sql.DB, seed bool) {
 	queryString := fmt.Sprintf(
-		"CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, name VARCHAR(128) NOT NULL UNIQUE, PRIMARY KEY (id))", workstreamNameTable)
+		`CREATE TABLE IF NOT EXISTS %v 
+		(id INT(10) NOT NULL AUTO_INCREMENT, 
+		name VARCHAR(128) NOT NULL UNIQUE, 
+		PRIMARY KEY (id))`, workstreamNameTable)
 
 	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
 	if seed {
-		seedWorkstreamNameTable(db)
+		seedWorkstreamNameTable()
 	}
 }
 
@@ -42,16 +46,6 @@ func buildSprintNameTable(db *sql.DB, seed bool) {
 
 	if seed {
 		seedSprintNameTable(db)
-	}
-}
-
-func buildSprintSummaryTable(db *sql.DB, seed bool) {
-	query, err := db.Prepare("CREATE TABLE IF NOT EXISTS " + sprintSummaryTable + " (id INT(10) NOT NULL AUTO_INCREMENT, workingDays INT, pointsCommitted INT, pointsAchieved INT, PRIMARY KEY(id))")
-	checkError(err)
-	query.Exec()
-
-	if seed {
-		seedSprintSummaryTable(db)
 	}
 }
 
@@ -68,13 +62,22 @@ func buildWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB, seed bool) {
 }
 
 func buildEngineerDetailsTable(db *sql.DB, seed bool) {
-	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, firstName TEXT, lastName TEXT, email VARCHAR(128) NOT NULL UNIQUE, velocity INTEGER, PRIMARY KEY(id))", engineerDetailsTable)
+	queryString := fmt.Sprintf(
+		`CREATE TABLE IF NOT EXISTS %v 
+		(id INT(10) NOT NULL AUTO_INCREMENT, 
+		first_name TEXT, 
+		last_name TEXT, 
+		email VARCHAR(128) NOT NULL UNIQUE, 
+		velocity INTEGER, 
+		PRIMARY KEY(id))`,
+		engineerDetailsTable)
+
 	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
 
 	if seed {
-		seedEngineerDetailsTable(db)
+		seedEngineerDetailsTable()
 	}
 }
 
@@ -117,12 +120,10 @@ func buildWorkstreamSprintEngineerSprintLineItemMap(db *sql.DB, seed bool) {
 	query.Exec()
 }
 
-func seedWorkstreamNameTable(db *sql.DB) {
-	query, err := db.Prepare("INSERT INTO " + workstreamNameTable + " (name) VALUES (?)")
-	checkError(err)
-	query.Exec("Workstream AAA000")
-	query.Exec("Workstream AAA001")
-	query.Exec("Workstream AAA002")
+func seedWorkstreamNameTable() {
+	AddWorkstreamName("Workstream AAA000")
+	AddWorkstreamName("Workstream AAA001")
+	AddWorkstreamName("Workstream AAA002")
 }
 
 func seedSprintNameTable(db *sql.DB) {
@@ -131,22 +132,6 @@ func seedSprintNameTable(db *sql.DB) {
 	query.Exec("2019.06.20")
 	query.Exec("2019.07.04")
 	query.Exec("2019.07.17")
-}
-
-func seedSprintSummaryTable(db *sql.DB) {
-	query, err := db.Prepare("INSERT INTO " + sprintSummaryTable + " (workingDays, pointsCommitted, pointsAchieved) VALUES(?, ?, ?)")
-	checkError(err)
-	query.Exec(34, 26, 13)
-	query.Exec(30, 24, 0)
-	query.Exec(35, 27, 21)
-
-	query.Exec(37, 28, 16)
-	query.Exec(32, 21, 5)
-	query.Exec(40, 22, 15)
-
-	query.Exec(41, 23, 20)
-	query.Exec(36, 25, 17)
-	query.Exec(45, 30, 10)
 }
 
 func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {
@@ -165,22 +150,19 @@ func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {
 	query.Exec(3, 3, 9)
 }
 
-func seedEngineerDetailsTable(db *sql.DB) {
-	queryString := fmt.Sprintf("INSERT INTO %v (firstName, lastName, email, velocity) VALUES (?, ?, ?, ?)", engineerDetailsTable)
-	query, err := db.Prepare(queryString)
-	checkError(err)
-	query.Exec("Bruce", "Dickinson", "a@mail.com", 0)
-	query.Exec("Steve", "Harris", "b@mail.com", 0)
-	query.Exec("Nicko", "McBrain", "c@mail.com", 0)
-	query.Exec("Adrian", "Smith", "d@mail.com", 0)
-	query.Exec("Dave", "Murray", "e@mail.com", 0)
-	query.Exec("Janick", "Gers", "f@mail.com", 0)
-	query.Exec("Paul", "Di`Anno", "g@mail.com", 0)
-	query.Exec("Blaze", "Bayley", "h@mail.com", 0)
-	query.Exec("Clive", "Burr", "i@mail.com", 0)
-	query.Exec("Dennis", "Stratton", "j@mail.com", 0)
-	query.Exec("Thunderstick", "Joe", "k@mail.com", 0)
-	query.Exec("Doug", "Sampson", "l@mail.com", 0)
+func seedEngineerDetailsTable() {
+	AddEngineerDetails("Bruce", "Dickinson", "a@mail.com")
+	AddEngineerDetails("Steve", "Harris", "b@mail.com")
+	AddEngineerDetails("Nicko", "McBrain", "c@mail.com")
+	AddEngineerDetails("Adrian", "Smith", "d@mail.com")
+	AddEngineerDetails("Dave", "Murray", "e@email.com")
+	AddEngineerDetails("Janick", "Gers", "f@mail.com")
+	AddEngineerDetails("Paul", "Di`Anno", "g@mail.com")
+	AddEngineerDetails("Blaze", "Bayley", "H@mail.com")
+	AddEngineerDetails("Clive", "Burr", "i@mail.com")
+	AddEngineerDetails("Dennis", "Stratton", "j@mail.com")
+	AddEngineerDetails("Thunderstick", "Joe", "k@mail.com")
+	AddEngineerDetails("Doug", "Sampson", "l@mail.com")
 }
 
 func seedSprintLineItemTable(db *sql.DB) {

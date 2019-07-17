@@ -56,6 +56,19 @@ const engineerDetailsTable string = "engineer_details"
 const sprintLineItemTable string = "sprint_line_item"
 const workstreamSprintEngineerSprintLineItemMapTable = "workstream_sprint_engineer_sprint_line_item_map"
 
+func addWorkstream(name string) {
+	db := getDatabase()
+	queryString := fmt.Sprintf(
+		`INSERT INTO %v
+		(name) VALUES (?)`,
+		workstreamNameTable,
+	)
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec(name)
+	db.Close()
+}
+
 func getAllWorkstreamNames() []byte {
 	dbBuilder(true)
 	db := getDatabase()
@@ -101,6 +114,21 @@ func getWorkstreamNameByID(ID int) string {
 	row.Close()
 	db.Close()
 	return name
+}
+
+func addEngineerDetails(firstName string, lastName string, emailAddress string) {
+	db := getDatabase()
+	queryString := fmt.Sprintf(
+		`INSERT INTO %v 
+		(first_name,
+			last_name,
+			email,
+			velocity) VALUES(?, ?, ?, ?)`,
+		engineerDetailsTable)
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec(firstName, lastName, emailAddress, 0)
+	db.Close()
 }
 
 func getEngineerDetails(engineerID int) EngineerDetails {
@@ -196,7 +224,6 @@ func checkCount(rows *sql.Rows) (count int) {
 func getDatabase() *sql.DB {
 	//<username>:<pw>@tcp(<HOST>:<port>)/<dbname>
 	connStr := config.ConnectionString
-	fmt.Println(connStr)
 	db, err := sql.Open("mysql", connStr)
 	if err != nil {
 		fmt.Println(err)
