@@ -20,7 +20,10 @@ func dbBuilder(seed bool) {
 // DB v1.0.0
 
 func buildWorkstreamNameTable(db *sql.DB, seed bool) {
-	query, err := db.Prepare("CREATE TABLE IF NOT EXISTS " + workstreamNameTable + "(id INTEGER PRIMARY KEY, name TEXT, UNIQUE(name))")
+	queryString := fmt.Sprintf(
+		"CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, name VARCHAR(128) NOT NULL UNIQUE, PRIMARY KEY (id))", workstreamNameTable)
+
+	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
 	if seed {
@@ -29,7 +32,9 @@ func buildWorkstreamNameTable(db *sql.DB, seed bool) {
 }
 
 func buildSprintNameTable(db *sql.DB, seed bool) {
-	query, err := db.Prepare("CREATE TABLE IF NOT EXISTS " + sprintNameTable + " (id INTEGER PRIMARY KEY, name TEXT, UNIQUE(name))")
+	queryString := fmt.Sprintf(
+		"CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, name VARCHAR(128) NOT NULL UNIQUE, PRIMARY KEY (id))", sprintNameTable)
+	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
 
@@ -39,7 +44,7 @@ func buildSprintNameTable(db *sql.DB, seed bool) {
 }
 
 func buildSprintSummaryTable(db *sql.DB, seed bool) {
-	query, err := db.Prepare("CREATE TABLE IF NOT EXISTS " + sprintSummaryTable + " (id INTEGER PRIMARY KEY, workingDays INTEGER, pointsCommitted INTEGER, pointsAchieved INTEGER)")
+	query, err := db.Prepare("CREATE TABLE IF NOT EXISTS " + sprintSummaryTable + " (id INT(10) NOT NULL AUTO_INCREMENT, workingDays INT, pointsCommitted INT, pointsAchieved INT, PRIMARY KEY(id))")
 	checkError(err)
 	query.Exec()
 
@@ -61,7 +66,7 @@ func buildWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB, seed bool) {
 }
 
 func buildEngineerDetailsTable(db *sql.DB, seed bool) {
-	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, UNIQUE(email))", engineerDetailsTable)
+	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, firstName TEXT, lastName TEXT, email VARCHAR(128) NOT NULL UNIQUE, PRIMARY KEY(id))", engineerDetailsTable)
 	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
@@ -91,15 +96,15 @@ func seedSprintSummaryTable(db *sql.DB) {
 	query, err := db.Prepare("INSERT INTO " + sprintSummaryTable + " (workingDays, pointsCommitted, pointsAchieved) VALUES(?, ?, ?)")
 	checkError(err)
 	query.Exec(34, 26, 13)
-	query.Exec(30, 22, 0)
-	query.Exec(35, 27, 20)
+	query.Exec(30, 24, 0)
+	query.Exec(35, 27, 21)
 
-	query.Exec(37, 28, 15)
+	query.Exec(37, 28, 16)
 	query.Exec(32, 21, 5)
 	query.Exec(40, 22, 15)
 
-	query.Exec(40, 23, 20)
-	query.Exec(35, 25, 15)
+	query.Exec(41, 23, 20)
+	query.Exec(36, 25, 17)
 	query.Exec(45, 30, 10)
 }
 
@@ -123,16 +128,16 @@ func seedEngineerDetailsTable(db *sql.DB) {
 	queryString := fmt.Sprintf("INSERT INTO %v (firstName, lastName, email) VALUES (?, ?, ?)", engineerDetailsTable)
 	query, err := db.Prepare(queryString)
 	checkError(err)
-	query.Exec("Jessica", "Huang", "email@mail.com")
-	query.Exec("Sreeni", "Vasulu", "mail@mail.com")
-	query.Exec("Evan", "Lie", "mail@mail.com")
-	query.Exec("Suneetha", "Talasia", "mail@mail.com")
-	query.Exec("Dan", "MacDonald", "mail@mail.com")
-	query.Exec("Dhurka", "Something", "mail@mail.com")
-	query.Exec("Fan", "Yang", "mail@mail.com")
-	query.Exec("Guy", "Dude", "mail@mail.com")
-	query.Exec("Sourabh", "Suman", "mail@mail.com")
-	query.Exec("Shreya", "Khomani", "mail@mail.com")
-	query.Exec("OtherDev", "KantRemember", "mail@mail.com")
-	query.Exec("Last", "One", "mail@mail.com")
+	query.Exec("Bruce", "Dickinson", "a@mail.com")
+	query.Exec("Steve", "Harris", "b@mail.com")
+	query.Exec("Nicko", "McBrain", "c@mail.com")
+	query.Exec("Adrian", "Smith", "d@mail.com")
+	query.Exec("Dave", "Murray", "e@mail.com")
+	query.Exec("Janick", "Gers", "f@mail.com")
+	query.Exec("Paul", "Di`Anno", "g@mail.com")
+	query.Exec("Blaze", "Bayley", "h@mail.com")
+	query.Exec("Clive", "Burr", "i@mail.com")
+	query.Exec("Dennis", "Stratton", "j@mail.com")
+	query.Exec("Thunderstick", "Joe", "k@mail.com")
+	query.Exec("Doug", "Sampson", "l@mail.com")
 }

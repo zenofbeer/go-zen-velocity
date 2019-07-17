@@ -8,6 +8,7 @@ import (
 
 	"github.com/zenofbeer/go-zen-velocity/configuration"
 	// need to force import
+	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -27,11 +28,11 @@ type SprintSummary struct {
 	ProductivityChange       float64
 }
 
-const workstreamNameTable string = "WorkstreamName"
-const sprintNameTable string = "SprintName"
-const sprintSummaryTable string = "SprintSummary"
+const workstreamNameTable string = "workstream_name"
+const sprintNameTable string = "sprint_name"
+const sprintSummaryTable string = "sprint_summary"
 const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintName_sprintSummary_Map"
-const engineerDetailsTable string = "engineerDetails"
+const engineerDetailsTable string = "engineer_details"
 
 func getAllWorkstreamNames() []byte {
 	dbBuilder(true)
@@ -142,12 +143,19 @@ func checkCount(rows *sql.Rows) (count int) {
 }
 
 func getDatabase() *sql.DB {
-
-	db, err := sql.Open("sqlite3", "vt.db")
+	//<username>:<pw>@tcp(<HOST>:<port>)/<dbname>
+	db, err := sql.Open("mysql", "")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	return db
+
+	/* db, err := sql.Open("sqlite3", "vt.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	return db */
 }
 
 func checkError(err error) {
