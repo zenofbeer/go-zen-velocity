@@ -7,6 +7,10 @@
 - No spreadsheets requiring manual page creation or breaking formulas
 - Still working out how to track versioning
 
+## Special Thanks
+### original wait spinner: https://tobiasahlin.com/spinkit/
+
+
 # Changelog
 ## [0.0.0-PRE-ALPHA] - 2019.07.16
 - Migrate to mysql

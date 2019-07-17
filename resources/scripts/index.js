@@ -49,8 +49,14 @@ resources.scripts.index = function() {
             type:'POST',
             dataType:'JSON',
             data:{ajaxpostdata:'hello'},
+            beforeSend:function(){
+                $('#selectWorkstreamDiv_spinner').show();
+                $('#selectWorkstreamDiv_selectItem').hide();
+            },
             success:function(response){
                 // console.log(JSON.stringify(response))
+                $('#selectWorkstreamDiv_spinner').hide();
+                $('#selectWorkstreamDiv_selectItem').show();
                 $('#WorkstreamAdminSelect').empty();
                 $.each(response.WorkstreamNames, function(i, workstreamName){
                     $('#WorkstreamAdminSelect').append($('<option></option').attr('id', workstreamName.ID).text(workstreamName.Name));
