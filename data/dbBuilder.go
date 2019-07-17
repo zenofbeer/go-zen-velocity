@@ -66,7 +66,7 @@ func buildWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB, seed bool) {
 }
 
 func buildEngineerDetailsTable(db *sql.DB, seed bool) {
-	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, firstName TEXT, lastName TEXT, email VARCHAR(128) NOT NULL UNIQUE, PRIMARY KEY(id))", engineerDetailsTable)
+	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, firstName TEXT, lastName TEXT, email VARCHAR(128) NOT NULL UNIQUE, velocity INTEGER, PRIMARY KEY(id))", engineerDetailsTable)
 	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
@@ -125,19 +125,19 @@ func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {
 }
 
 func seedEngineerDetailsTable(db *sql.DB) {
-	queryString := fmt.Sprintf("INSERT INTO %v (firstName, lastName, email) VALUES (?, ?, ?)", engineerDetailsTable)
+	queryString := fmt.Sprintf("INSERT INTO %v (firstName, lastName, email, velocity) VALUES (?, ?, ?, ?)", engineerDetailsTable)
 	query, err := db.Prepare(queryString)
 	checkError(err)
-	query.Exec("Bruce", "Dickinson", "a@mail.com")
-	query.Exec("Steve", "Harris", "b@mail.com")
-	query.Exec("Nicko", "McBrain", "c@mail.com")
-	query.Exec("Adrian", "Smith", "d@mail.com")
-	query.Exec("Dave", "Murray", "e@mail.com")
-	query.Exec("Janick", "Gers", "f@mail.com")
-	query.Exec("Paul", "Di`Anno", "g@mail.com")
-	query.Exec("Blaze", "Bayley", "h@mail.com")
-	query.Exec("Clive", "Burr", "i@mail.com")
-	query.Exec("Dennis", "Stratton", "j@mail.com")
-	query.Exec("Thunderstick", "Joe", "k@mail.com")
-	query.Exec("Doug", "Sampson", "l@mail.com")
+	query.Exec("Bruce", "Dickinson", "a@mail.com", 0)
+	query.Exec("Steve", "Harris", "b@mail.com", 0)
+	query.Exec("Nicko", "McBrain", "c@mail.com", 0)
+	query.Exec("Adrian", "Smith", "d@mail.com", 0)
+	query.Exec("Dave", "Murray", "e@mail.com", 0)
+	query.Exec("Janick", "Gers", "f@mail.com", 0)
+	query.Exec("Paul", "Di`Anno", "g@mail.com", 0)
+	query.Exec("Blaze", "Bayley", "h@mail.com", 0)
+	query.Exec("Clive", "Burr", "i@mail.com", 0)
+	query.Exec("Dennis", "Stratton", "j@mail.com", 0)
+	query.Exec("Thunderstick", "Joe", "k@mail.com", 0)
+	query.Exec("Doug", "Sampson", "l@mail.com", 0)
 }

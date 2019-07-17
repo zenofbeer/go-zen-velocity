@@ -9,7 +9,7 @@ import (
 	"github.com/zenofbeer/go-zen-velocity/configuration"
 	// need to force import
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/mattn/go-sqlite3"
+	//_ "github.com/mattn/go-sqlite3"
 )
 
 var config = configuration.GetConfig()
@@ -26,6 +26,14 @@ type SprintSummary struct {
 	TargetPercentageAchieved float64
 	Productivity             float64
 	ProductivityChange       float64
+}
+
+// EngineerDetails contains the data from an engineer detail query result
+type EngineerDetails struct {
+	ID        int
+	FirstName string
+	LastName  string
+	Email     string
 }
 
 const workstreamNameTable string = "workstream_name"
@@ -79,6 +87,35 @@ func getWorkstreamNameByID(ID int) string {
 	row.Close()
 	db.Close()
 	return name
+}
+
+func getEngineerDetails(engineerID int) EngineerDetails {
+	db := getDatabase()
+
+	queryString := fmt.Sprintf(
+		"SELECT * FROM %v WHERE id = %v LIMIT 1",
+		engineerDetailsTable, engineerID)
+
+	query, err := db.Query(queryString)
+	checkError(err)
+
+	var id int
+	var firstName string
+	var lastName string
+	var emailAddress string
+	var retVal EngineerDetails
+
+	for query.Next() {
+		query.Scan(&id, &firstName, &lastName, &emailAddress)
+		retVal = EngineerDetails{
+			ID:        id,
+			FirstName: firstName,
+			LastName:  lastName,
+			Email:     emailAddress,
+		}
+	}
+
+	return retVal
 }
 
 func getWorkstreamOverview(ID int) []SprintSummary {
@@ -144,7 +181,9 @@ func checkCount(rows *sql.Rows) (count int) {
 
 func getDatabase() *sql.DB {
 	//<username>:<pw>@tcp(<HOST>:<port>)/<dbname>
-	db, err := sql.Open("mysql", "")
+	connStr := config.ConnectionString
+	fmt.Println(connStr)
+	db, err := sql.Open("mysql", connStr)
 	if err != nil {
 		fmt.Println(err)
 	}

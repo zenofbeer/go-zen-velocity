@@ -8,6 +8,8 @@
 - Still working out how to track versioning
 
 # Changelog
+## [0.0.0-PRE-ALPHA] - 2019.07.16
+- Migrate to mysql
 ## [0.0.0-PRE-ALPHA] - 2019.07.15
 - Put basic pages in place for landing, workstream, and sprint detail.
 - Begin stubbing in database and seeing how these things fit together. 
