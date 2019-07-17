@@ -14,6 +14,7 @@ func dbBuilder(seed bool) {
 	buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
 	buildEngineerDetailsTable(db, seed)
 	buildSprintLineItemTable(db, seed)
+	buildWorkstreamSprintEngineerSprintLineItemMap(db, seed)
 
 	db.Close()
 }
@@ -98,6 +99,22 @@ func buildSprintLineItemTable(db *sql.DB, seed bool) {
 	if seed {
 		seedSprintLineItemTable(db)
 	}
+}
+
+func buildWorkstreamSprintEngineerSprintLineItemMap(db *sql.DB, seed bool) {
+	queryString := fmt.Sprintf(
+		`CREATE TABLE IF NOT EXISTS %v 
+		(workstream_id INT NOT NULL,
+		sprint_id INT NOT NULL,
+		engineer_id INT NOT NULL,
+		sprint_line_item_id INT NOT NULL,
+		PRIMARY KEY (workstream_id, sprint_id, engineer_id, sprint_line_item_id))`,
+		workstreamSprintEngineerSprintLineItemMapTable,
+	)
+
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec()
 }
 
 func seedWorkstreamNameTable(db *sql.DB) {

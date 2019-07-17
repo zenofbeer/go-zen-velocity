@@ -51,9 +51,10 @@ type SprintLineItem struct {
 const workstreamNameTable string = "workstream_name"
 const sprintNameTable string = "sprint_name"
 const sprintSummaryTable string = "sprint_summary"
-const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintname_sprintsummary_Map"
+const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintname_sprintsummary_map"
 const engineerDetailsTable string = "engineer_details"
 const sprintLineItemTable string = "sprint_line_item"
+const workstreamSprintEngineerSprintLineItemMapTable = "workstream_sprint_engineer_sprint_line_item_map"
 
 func getAllWorkstreamNames() []byte {
 	dbBuilder(true)
