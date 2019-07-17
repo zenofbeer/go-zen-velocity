@@ -160,6 +160,21 @@ func getEngineerDetails(engineerID int) EngineerDetails {
 	return retVal
 }
 
+func addSprintName(name string) {
+	queryString := fmt.Sprintf(`
+		INSERT INTO %v (name) 
+		VALUES (?)`,
+		sprintNameTable)
+
+	db := getDatabase()
+
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec(name)
+
+	db.Close()
+}
+
 func getWorkstreamOverview(ID int) []SprintSummary {
 	db := getDatabase()
 

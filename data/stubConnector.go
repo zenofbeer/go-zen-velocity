@@ -54,6 +54,11 @@ func AddEngineerDetails(firstName string, lastName string, emailAddress string) 
 	addEngineerDetails(firstName, lastName, emailAddress)
 }
 
+// AddSprintName add a new sprint
+func AddSprintName(name string) {
+	addSprintName(name)
+}
+
 func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 	summary := getWorkstreamOverview(ID)
 

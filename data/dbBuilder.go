@@ -10,8 +10,9 @@ func dbBuilder(seed bool) {
 
 	buildWorkstreamNameTable(db, seed)
 	buildEngineerDetailsTable(db, seed)
+	buildSprintNameTable(db, seed)
+
 	/*
-		buildSprintNameTable(db, seed)
 		buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
 
 		buildSprintLineItemTable(db, seed)
@@ -39,13 +40,18 @@ func buildWorkstreamNameTable(db *sql.DB, seed bool) {
 
 func buildSprintNameTable(db *sql.DB, seed bool) {
 	queryString := fmt.Sprintf(
-		"CREATE TABLE IF NOT EXISTS %v (id INT(10) NOT NULL AUTO_INCREMENT, name VARCHAR(128) NOT NULL UNIQUE, PRIMARY KEY (id))", sprintNameTable)
+		`CREATE TABLE IF NOT EXISTS %v 
+		(id INT(10) NOT NULL AUTO_INCREMENT, 
+		name VARCHAR(128) NOT NULL UNIQUE, 
+		PRIMARY KEY (id))`,
+		sprintNameTable)
+
 	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
 
 	if seed {
-		seedSprintNameTable(db)
+		seedSprintNameTable()
 	}
 }
 
@@ -126,12 +132,10 @@ func seedWorkstreamNameTable() {
 	AddWorkstreamName("Workstream AAA002")
 }
 
-func seedSprintNameTable(db *sql.DB) {
-	query, err := db.Prepare("INSERT INTO " + sprintNameTable + " (name) VALUES (?)")
-	checkError(err)
-	query.Exec("2019.06.20")
-	query.Exec("2019.07.04")
-	query.Exec("2019.07.17")
+func seedSprintNameTable() {
+	AddSprintName("2019.06.20")
+	AddSprintName("2019.07.04")
+	AddSprintName("2019.07.17")
 }
 
 func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {
