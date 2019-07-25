@@ -11,12 +11,14 @@ func dbBuilder(seed bool) {
 	buildWorkstreamNameTable(db, seed)
 	buildEngineerDetailsTable(db, seed)
 	buildSprintNameTable(db, seed)
+	buildSprintLineItemTable(db)
+	buildWorkstreamSprintEngineerSprintLineItemMap(db)
+	// add an empty sprint
+	AddSprint(1, 1, 1)
 
 	/*
 		buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
 
-		buildSprintLineItemTable(db, seed)
-		buildWorkstreamSprintEngineerSprintLineItemMap(db, seed)
 	*/
 	db.Close()
 }
@@ -87,7 +89,7 @@ func buildEngineerDetailsTable(db *sql.DB, seed bool) {
 	}
 }
 
-func buildSprintLineItemTable(db *sql.DB, seed bool) {
+func buildSprintLineItemTable(db *sql.DB) {
 	queryString := fmt.Sprintf(
 		"CREATE TABLE IF NOT EXISTS %v "+
 			"(id INT(10) NOT NULL AUTO_INCREMENT, "+
@@ -104,13 +106,9 @@ func buildSprintLineItemTable(db *sql.DB, seed bool) {
 	query, err := db.Prepare(queryString)
 	checkError(err)
 	query.Exec()
-
-	if seed {
-		seedSprintLineItemTable(db)
-	}
 }
 
-func buildWorkstreamSprintEngineerSprintLineItemMap(db *sql.DB, seed bool) {
+func buildWorkstreamSprintEngineerSprintLineItemMap(db *sql.DB) {
 	queryString := fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS %v 
 		(workstream_id INT NOT NULL,

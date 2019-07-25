@@ -28,6 +28,12 @@ type SprintSummary struct {
 	ProductivityChange       float64
 }
 
+// SprintName contains a sprint name entity
+type SprintName struct {
+	ID   int
+	Name string
+}
+
 // EngineerDetails contains the data from an engineer detail query result
 type EngineerDetails struct {
 	ID        int
@@ -175,6 +181,86 @@ func addSprintName(name string) {
 	db.Close()
 }
 
+func addSprintLineItem(lineItem SprintLineItem) int {
+	queryString := fmt.Sprintf(
+		`INSERT INTO %v (
+			current_availability,
+			previous_availability,
+			capacity,
+			target_points,
+			committed_points_this_sprint,
+			completed_points_this_sprint,
+			completed_points_last_sprint)
+			VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		sprintLineItemTable)
+
+	db := getDatabase()
+
+	query, err := db.Prepare(queryString)
+	checkError(err)
+
+	query.Exec(
+		lineItem.CurrentAvailability,
+		lineItem.PreviousAvailability,
+		lineItem.Capacity,
+		lineItem.TargetPoints,
+		lineItem.CommittedPointsThisSprint,
+		lineItem.CompletedPointsThisSprint,
+		lineItem.CompletedPointsLastSprint,
+	)
+
+	queryString = "SELECT LAST_INSERT_ID();"
+	results, err := db.Query(queryString)
+	checkError(err)
+	var ID int
+
+	for results.Next() {
+		results.Scan(&ID)
+	}
+
+	db.Close()
+
+	return ID
+}
+
+func getSprintLineItem(sprintNameID int, engineerID int) {
+	// join map table and sprint line item table
+}
+
+func getPreviousSprintName(ID int) SprintName {
+	queryString := fmt.Sprintf(
+		`SELECT * FROM %v 
+		WHERE id = (
+			SELECT MAX(id)
+			FROM %v 
+			WHERE id < %v)`,
+		sprintNameTable,
+		sprintNameTable,
+		ID)
+	db := getDatabase()
+	result, err := db.Query(queryString)
+	checkError(err)
+	var sprintName SprintName
+	previousID := -1
+	previousName := ""
+
+	sprintName = SprintName{
+		ID:   previousID,
+		Name: "",
+	}
+
+	for result.Next() {
+		result.Scan(&previousID, &previousName)
+		sprintName.ID = previousID
+		sprintName.Name = previousName
+	}
+
+	db.Close()
+
+	return sprintName
+
+}
+
 func getWorkstreamOverview(ID int) []SprintSummary {
 	db := getDatabase()
 
@@ -224,6 +310,23 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 		counter++
 	}
 	return summaries
+}
+
+func addWorkstreamSprintEngineerSprintLineItemMap(workstreamID int, sprintID int, engineerID int, sprintLineItemID int) {
+	queryString := fmt.Sprintf(
+		`INSERT INTO %v (
+			workstream_id,
+			sprint_id,
+			engineer_id,
+			sprint_line_item_id)
+			VALUES(?, ?, ?, ?)`,
+		workstreamSprintEngineerSprintLineItemMapTable)
+
+	db := getDatabase()
+	query, err := db.Prepare(queryString)
+	checkError(err)
+	query.Exec(workstreamID, sprintID, engineerID, sprintLineItemID)
+	db.Close()
 }
 
 func checkCount(rows *sql.Rows) (count int) {

@@ -59,6 +59,40 @@ func AddSprintName(name string) {
 	addSprintName(name)
 }
 
+// AddSprint add a new sprint to a workstream. A sprint requires a mapping between a workstream,
+// a sprintNameID, an engineer, and a sprint line item
+func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
+	// get previous sprint, if any
+	previousSprintName := getPreviousSprintName(currentSprintNameID)
+
+	if previousSprintName.ID == -1 {
+		sprintLineItem := SprintLineItem{
+			CurrentAvailability:       0,
+			PreviousAvailability:      0,
+			Capacity:                  0,
+			TargetPoints:              0,
+			CommittedPointsThisSprint: 0,
+			CompletedPointsThisSprint: 0,
+			CompletedPointsLastSprint: 0,
+		}
+		sprintLineItemID := addSprintLineItem(sprintLineItem)
+		addWorkstreamSprintEngineerSprintLineItemMap(workstreamID, currentSprintNameID, engineerID, sprintLineItemID)
+	}
+
+	// get engineer
+	//engineer := getEngineerDetails(engineerID)
+
+	// get previous sprint line item by engineerID & previousSprintName.ID, if any
+
+	// if previousSprintName != nil
+
+	// calculate new line item fields
+	// build SprintLineItem struct from calculated fields and engineer data
+	// add sprint line item
+	// add record in workstream_sprint_engineer_line_item_map
+	// when this is working execute above concurrently
+}
+
 func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 	summary := getWorkstreamOverview(ID)
 
