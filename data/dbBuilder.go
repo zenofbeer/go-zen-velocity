@@ -16,6 +16,9 @@ func dbBuilder(seed bool) {
 	// add an empty sprint
 	AddSprint(1, 1, 1)
 
+	// copy a previous sprint
+	AddSprint(1, 2, 1)
+
 	/*
 		buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
 

@@ -1,8 +1,6 @@
 package data
 
 import (
-	"math"
-
 	"github.com/zenofbeer/go-zen-velocity/helpers"
 )
 
@@ -109,8 +107,8 @@ func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 		pa := summary[i].PointsAchieved
 		pc := summary[i].PointsCommitted
 		wd := summary[i].WorkingDays
-		tpa := getFloatToTwo((float64(pa) / float64(pc)) * 100)
-		p := getFloatToTwo((float64(pa) / float64(wd)) * 100)
+		tpa := helpers.RoundToTwoDecimals((float64(pa) / float64(pc)) * 100)
+		p := helpers.RoundToTwoDecimals((float64(pa) / float64(wd)) * 100)
 
 		summary[i].TargetPercentageAchieved = tpa
 		summary[i].Productivity = p
@@ -119,7 +117,7 @@ func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 			tp := summary[i].Productivity
 			lp := summary[i-1].Productivity
 			pc := tp - lp
-			summary[i].ProductivityChange = getFloatToTwo(pc)
+			summary[i].ProductivityChange = helpers.RoundToTwoDecimals(pc)
 		}
 	}
 
@@ -134,8 +132,4 @@ func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 		SprintSummaries:               summary,
 	}
 	return retVal
-}
-
-func getFloatToTwo(rawNumber float64) float64 {
-	return math.Round(rawNumber*100) / 100
 }

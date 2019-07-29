@@ -25,11 +25,12 @@ func CalculateTargetPoints(lastCompletedPoints int, currentCapacity int) float64
 	c := float64(currentCapacity)
 	i := float64(config.SprintSettings.VelocityIncreaseGoalConstant)
 
-	rawTarget := roundToTwoDecimals((l*c + ((l * c) * i)))
+	rawTarget := RoundToTwoDecimals((l*c + ((l * c) * i)))
 
 	return rawTarget + 1
 }
 
-func roundToTwoDecimals(value float64) float64 {
+// RoundToTwoDecimals utility function to round a float64 to two decimal points
+func RoundToTwoDecimals(value float64) float64 {
 	return math.Round(value*100) / 100
 }
