@@ -2,6 +2,8 @@ package data
 
 import (
 	"math"
+
+	"github.com/zenofbeer/go-zen-velocity/helpers"
 )
 
 // WorkstreamName the workstream name and ID
@@ -64,10 +66,11 @@ func AddSprintName(name string) {
 func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
 	// get previous sprint, if any
 	previousSprintName := getPreviousSprintName(currentSprintNameID)
+	defaultAvailability := config.SprintSettings.DefaultAvailability
 
 	if previousSprintName.ID == -1 {
 		sprintLineItem := SprintLineItem{
-			CurrentAvailability:       0,
+			CurrentAvailability:       defaultAvailability,
 			PreviousAvailability:      0,
 			Capacity:                  0,
 			TargetPoints:              0,
@@ -77,20 +80,26 @@ func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
 		}
 		sprintLineItemID := addSprintLineItem(sprintLineItem)
 		addWorkstreamSprintEngineerSprintLineItemMap(workstreamID, currentSprintNameID, engineerID, sprintLineItemID)
+	} else {
+		engineer := getEngineerDetails(engineerID)
+		// get previous sprint line item by engineerID & previousSprintName.ID
+		previousSprintLineItem := getSprintLineItem(previousSprintName.ID, engineer.ID)
+		// calculate new line item fields
+		// build SprintLineItem struct from calculated fields and engineer data
+		currentSprintLineItem := SprintLineItem{
+			CurrentAvailability:       defaultAvailability,
+			PreviousAvailability:      previousSprintLineItem.CurrentAvailability,
+			Capacity:                  helpers.CalculateCapacityAsPercentage(10, previousSprintLineItem.CurrentAvailability),
+			TargetPoints:              helpers.CalculateTargetPoints(previousSprintLineItem.CompletedPointsThisSprint, defaultAvailability),
+			CommittedPointsThisSprint: 0,
+			CompletedPointsThisSprint: 0,
+			CompletedPointsLastSprint: previousSprintLineItem.CompletedPointsThisSprint,
+		}
+		// add sprint line item
+		sprintLineItemID := addSprintLineItem(currentSprintLineItem)
+		// add record in workstream_sprint_engineer_line_item_map
+		addWorkstreamSprintEngineerSprintLineItemMap(workstreamID, currentSprintNameID, engineerID, sprintLineItemID)
 	}
-
-	// get engineer
-	//engineer := getEngineerDetails(engineerID)
-
-	// get previous sprint line item by engineerID & previousSprintName.ID, if any
-
-	// if previousSprintName != nil
-
-	// calculate new line item fields
-	// build SprintLineItem struct from calculated fields and engineer data
-	// add sprint line item
-	// add record in workstream_sprint_engineer_line_item_map
-	// when this is working execute above concurrently
 }
 
 func getWorkstreamOverviewOld(ID int) WorkstreamOverview {

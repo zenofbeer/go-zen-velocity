@@ -48,7 +48,7 @@ type SprintLineItem struct {
 	CurrentAvailability       int
 	PreviousAvailability      int
 	Capacity                  int
-	TargetPoints              int
+	TargetPoints              float64
 	CommittedPointsThisSprint int
 	CompletedPointsThisSprint int
 	CompletedPointsLastSprint int
@@ -223,8 +223,67 @@ func addSprintLineItem(lineItem SprintLineItem) int {
 	return ID
 }
 
-func getSprintLineItem(sprintNameID int, engineerID int) {
-	// join map table and sprint line item table
+func getSprintLineItem(sprintNameID int, engineerID int) SprintLineItem {
+	/*
+			SELECT
+		   current_availability,
+		   previous_availability,
+		   capacity,
+		   target_points,
+		   committed_points_this_sprint,
+		   completed_points_this_sprint,
+		   completed_points_last_sprint
+		FROM sprint_line_item
+		INNER JOIN workstream_sprint_engineer_sprint_line_item_map
+		ON workstream_sprint_engineer_sprint_line_item_map.engineer_id=1
+		AND workstream_sprint_engineer_sprint_line_item_map.sprint_id=1
+		AND workstream_sprint_engineer_sprint_line_item_map.sprint_line_item_id=sprint_line_item.id
+	*/
+	queryString := fmt.Sprintf(`
+		SELECT
+			current_availability,
+			previous_availability,
+			capacity,
+			target_points,
+			committed_points_this_sprint,
+			completed_points_this_sprint,
+			completed_points_last_sprint
+		FROM %v
+		INNDR JOIN %v
+		ON %v.engineer_id=%v
+		AND %v.sprint_id=%v
+		AND %v.sprint_line_item_id=%v.id`,
+		sprintLineItemTable,
+		workstreamSprintEngineerSprintLineItemMapTable,
+		workstreamSprintEngineerSprintLineItemMapTable, engineerID,
+		workstreamSprintEngineerSprintLineItemMapTable, sprintNameID,
+		workstreamSprintEngineerSprintLineItemMapTable, sprintLineItemTable)
+	db := getDatabase()
+	result, err := db.Query(queryString)
+	checkError(err)
+	var sprintLineItem SprintLineItem
+	var currentAvailability int
+	var previousAvailability int
+	var capacity int
+	var targetPoints float64
+	var committedPointsThisSprint int
+	var completedPointsThisSprint int
+	var completedPointsLastSprint int
+
+	for result.Next() {
+		result.Scan(
+			&currentAvailability, &previousAvailability, &capacity, &targetPoints,
+			&committedPointsThisSprint, &completedPointsThisSprint, &completedPointsLastSprint)
+		sprintLineItem.CurrentAvailability = currentAvailability
+		sprintLineItem.PreviousAvailability = previousAvailability
+		sprintLineItem.Capacity = capacity
+		sprintLineItem.TargetPoints = targetPoints
+		sprintLineItem.CommittedPointsThisSprint = committedPointsThisSprint
+		sprintLineItem.CompletedPointsThisSprint = completedPointsThisSprint
+		sprintLineItem.CompletedPointsLastSprint = completedPointsLastSprint
+	}
+	db.Close()
+	return sprintLineItem
 }
 
 func getPreviousSprintName(ID int) SprintName {

@@ -13,6 +13,7 @@
         "PageID" : "workstream"
     },
     "Sprint" : {
-        "VelocityIncreaseGoalConstant" : 5
+        "VelocityIncreaseGoalConstant" : 5,
+        "DefaultAvailability" : 10
     }
 }
