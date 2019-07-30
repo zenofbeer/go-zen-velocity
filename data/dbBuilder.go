@@ -33,7 +33,7 @@ func buildWorkstreamNameTable(db *sql.DB, seed bool) {
 		`CREATE TABLE IF NOT EXISTS %v 
 		(id INT(10) NOT NULL AUTO_INCREMENT, 
 		name VARCHAR(128) NOT NULL UNIQUE, 
-		PRIMARY KEY (id))`, workstreamNameTable)
+		PRIMARY KEY (id)) ENGINE=InnoDB;`, workstreamNameTable)
 
 	query, err := db.Prepare(queryString)
 	checkError(err)
