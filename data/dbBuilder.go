@@ -118,7 +118,7 @@ func buildWorkstreamSprintEngineerSprintLineItemMap(db *sql.DB) {
 		sprint_id INT NOT NULL,
 		engineer_id INT NOT NULL,
 		sprint_line_item_id INT NOT NULL,
-		PRIMARY KEY (workstream_id, sprint_id, engineer_id, sprint_line_item_id))`,
+		PRIMARY KEY (workstream_id, sprint_id, engineer_id))`,
 		workstreamSprintEngineerSprintLineItemMapTable,
 	)
 

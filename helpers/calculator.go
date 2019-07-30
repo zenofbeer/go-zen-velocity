@@ -11,7 +11,12 @@ var config = configuration.GetConfig()
 // CalculateCapacityAsPercentage calculates the engineer's capacity and returns that value as a percentage
 func CalculateCapacityAsPercentage(currentAvailability int, lastAvailability int) int {
 	// (current/last)*100
-	return (currentAvailability / lastAvailability) * 100
+	retVal := 0
+	if lastAvailability != retVal {
+		retVal = (currentAvailability / lastAvailability) * 100
+	}
+
+	return retVal
 }
 
 // CalculateTargetPoints calculates the target points for this sprint

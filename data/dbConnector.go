@@ -181,7 +181,21 @@ func addSprintName(name string) {
 	db.Close()
 }
 
-func addSprintLineItem(lineItem SprintLineItem) int {
+func addSprintLineItem(lineItem SprintLineItem, workstreamID int, sprintID int, engineerID int) {
+	db := getDatabase()
+	tx, err := db.Begin()
+	checkError(err)
+
+	// defer db.Close()
+
+	lineItemID := insertSprintLineItem(lineItem, tx)
+	addWorkstreamSprintEngineerSprintLineItemMap(workstreamID, sprintID, engineerID, lineItemID, tx)
+
+	err = tx.Commit()
+	db.Close()
+}
+
+func insertSprintLineItem(lineItem SprintLineItem, tx *sql.Tx) int {
 	queryString := fmt.Sprintf(
 		`INSERT INTO %v (
 			current_availability,
@@ -194,12 +208,9 @@ func addSprintLineItem(lineItem SprintLineItem) int {
 			VALUES (?, ?, ?, ?, ?, ?, ?)`,
 		sprintLineItemTable)
 
-	db := getDatabase()
+	//query, err := tx.Prepare(queryString)
 
-	query, err := db.Prepare(queryString)
-	checkError(err)
-
-	query.Exec(
+	result, err := tx.Exec(queryString,
 		lineItem.CurrentAvailability,
 		lineItem.PreviousAvailability,
 		lineItem.Capacity,
@@ -209,18 +220,14 @@ func addSprintLineItem(lineItem SprintLineItem) int {
 		lineItem.CompletedPointsLastSprint,
 	)
 
-	queryString = "SELECT LAST_INSERT_ID();"
-	results, err := db.Query(queryString)
-	checkError(err)
-	var ID int
-
-	for results.Next() {
-		results.Scan(&ID)
+	if err != nil {
+		tx.Rollback()
+		checkError(err)
 	}
 
-	db.Close()
+	ID, err := result.LastInsertId()
 
-	return ID
+	return int(ID)
 }
 
 func getSprintLineItem(sprintNameID int, engineerID int) SprintLineItem {
@@ -252,12 +259,12 @@ func getSprintLineItem(sprintNameID int, engineerID int) SprintLineItem {
 		INNDR JOIN %v
 		ON %v.engineer_id=%v
 		AND %v.sprint_id=%v
-		AND %v.sprint_line_item_id=%v.id`,
+		AND %v.sprint_line_item_id=id`,
 		sprintLineItemTable,
 		workstreamSprintEngineerSprintLineItemMapTable,
 		workstreamSprintEngineerSprintLineItemMapTable, engineerID,
 		workstreamSprintEngineerSprintLineItemMapTable, sprintNameID,
-		workstreamSprintEngineerSprintLineItemMapTable, sprintLineItemTable)
+		workstreamSprintEngineerSprintLineItemMapTable)
 	db := getDatabase()
 	result, err := db.Query(queryString)
 	checkError(err)
@@ -371,7 +378,7 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	return summaries
 }
 
-func addWorkstreamSprintEngineerSprintLineItemMap(workstreamID int, sprintID int, engineerID int, sprintLineItemID int) {
+func addWorkstreamSprintEngineerSprintLineItemMap(workstreamID int, sprintID int, engineerID int, sprintLineItemID int, tx *sql.Tx) {
 	queryString := fmt.Sprintf(
 		`INSERT INTO %v (
 			workstream_id,
@@ -381,11 +388,12 @@ func addWorkstreamSprintEngineerSprintLineItemMap(workstreamID int, sprintID int
 			VALUES(?, ?, ?, ?)`,
 		workstreamSprintEngineerSprintLineItemMapTable)
 
-	db := getDatabase()
-	query, err := db.Prepare(queryString)
-	checkError(err)
-	query.Exec(workstreamID, sprintID, engineerID, sprintLineItemID)
-	db.Close()
+	result, err := tx.Exec(queryString, workstreamID, sprintID, engineerID, sprintLineItemID)
+	if err != nil {
+		tx.Rollback()
+		println(result)
+		println("here I am.")
+	}
 }
 
 func checkCount(rows *sql.Rows) (count int) {

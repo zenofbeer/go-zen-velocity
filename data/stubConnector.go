@@ -76,8 +76,8 @@ func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
 			CompletedPointsThisSprint: 0,
 			CompletedPointsLastSprint: 0,
 		}
-		sprintLineItemID := addSprintLineItem(sprintLineItem)
-		addWorkstreamSprintEngineerSprintLineItemMap(workstreamID, currentSprintNameID, engineerID, sprintLineItemID)
+		addSprintLineItem(
+			sprintLineItem, workstreamID, currentSprintNameID, engineerID)
 	} else {
 		engineer := getEngineerDetails(engineerID)
 		// get previous sprint line item by engineerID & previousSprintName.ID
@@ -93,10 +93,8 @@ func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
 			CompletedPointsThisSprint: 0,
 			CompletedPointsLastSprint: previousSprintLineItem.CompletedPointsThisSprint,
 		}
-		// add sprint line item
-		sprintLineItemID := addSprintLineItem(currentSprintLineItem)
-		// add record in workstream_sprint_engineer_line_item_map
-		addWorkstreamSprintEngineerSprintLineItemMap(workstreamID, currentSprintNameID, engineerID, sprintLineItemID)
+		addSprintLineItem(
+			currentSprintLineItem, workstreamID, currentSprintNameID, engineerID)
 	}
 }
 
