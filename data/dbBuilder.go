@@ -13,12 +13,28 @@ func dbBuilder(seed bool) {
 	buildSprintNameTable(db, seed)
 	buildSprintLineItemTable(db)
 	buildWorkstreamSprintEngineerSprintLineItemMap(db)
-	// add an empty sprint
-	AddSprint(1, 1, 1)
 
-	// copy a previous sprint
-	AddSprint(1, 2, 1)
-	AddSprint(1, 2, 2)
+	if seed {
+
+		// add an empty sprint
+		AddSprint(1, 1, 1)
+
+		// copy a previous sprint
+		AddSprint(1, 2, 1)
+		AddSprint(1, 2, 2)
+		AddSprint(1, 2, 3)
+		AddSprint(1, 2, 4)
+
+		AddSprint(2, 2, 5)
+		AddSprint(2, 2, 6)
+		AddSprint(2, 2, 7)
+		AddSprint(2, 2, 8)
+
+		AddSprint(2, 2, 9)
+		AddSprint(2, 2, 10)
+		AddSprint(2, 2, 11)
+		AddSprint(2, 2, 12)
+	}
 
 	/*
 		buildWorkstreamSprintNameSprintSummaryMapTable(db, seed)
@@ -49,7 +65,7 @@ func buildSprintNameTable(db *sql.DB, seed bool) {
 		`CREATE TABLE IF NOT EXISTS %v 
 		(id INT(10) NOT NULL AUTO_INCREMENT, 
 		name VARCHAR(128) NOT NULL UNIQUE, 
-		PRIMARY KEY (id))`,
+		PRIMARY KEY (id)) ENGINE=InnoDB;`,
 		sprintNameTable)
 
 	query, err := db.Prepare(queryString)
@@ -62,7 +78,7 @@ func buildSprintNameTable(db *sql.DB, seed bool) {
 }
 
 func buildWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB, seed bool) {
-	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (workstreamId INTEGER NOT NULL, sprintNameId INTEGER NOT NULL, sprintSummaryId INTEGER NOT NULL, PRIMARY KEY (workstreamId, sprintNameId, sprintSummaryId))",
+	queryString := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (workstreamId INTEGER NOT NULL, sprintNameId INTEGER NOT NULL, sprintSummaryId INTEGER NOT NULL, PRIMARY KEY (workstreamId, sprintNameId, sprintSummaryId)) ENGINE=InnoDB;",
 		workstreamSprintNameSprintSummaryMapTable)
 	query, err := db.Prepare(queryString)
 	checkError(err)
@@ -81,7 +97,7 @@ func buildEngineerDetailsTable(db *sql.DB, seed bool) {
 		last_name TEXT, 
 		email VARCHAR(128) NOT NULL UNIQUE, 
 		velocity INTEGER, 
-		PRIMARY KEY(id))`,
+		PRIMARY KEY(id)) ENGINE=InnoDB;`,
 		engineerDetailsTable)
 
 	query, err := db.Prepare(queryString)
@@ -104,7 +120,7 @@ func buildSprintLineItemTable(db *sql.DB) {
 			"committed_points_this_sprint INT, "+
 			"completed_points_this_sprint INT, "+
 			"completed_points_last_sprint INT, "+
-			"PRIMARY KEY (id))",
+			"PRIMARY KEY (id)) ENGINE=InnoDB;",
 		sprintLineItemTable)
 
 	query, err := db.Prepare(queryString)
@@ -119,7 +135,7 @@ func buildWorkstreamSprintEngineerSprintLineItemMap(db *sql.DB) {
 		sprint_id INT NOT NULL,
 		engineer_id INT NOT NULL,
 		sprint_line_item_id INT NOT NULL,
-		PRIMARY KEY (workstream_id, sprint_id, engineer_id))`,
+		PRIMARY KEY (workstream_id, sprint_id, engineer_id)) ENGINE=InnoDB;`,
 		workstreamSprintEngineerSprintLineItemMapTable,
 	)
 

@@ -186,7 +186,7 @@ func addSprintLineItem(lineItem SprintLineItem, workstreamID int, sprintID int, 
 	tx, err := db.Begin()
 	checkError(err)
 
-	// defer db.Close()
+	defer db.Close()
 
 	lineItemID := insertSprintLineItem(lineItem, tx)
 	addWorkstreamSprintEngineerSprintLineItemMap(workstreamID, sprintID, engineerID, lineItemID, tx)
