@@ -231,21 +231,6 @@ func insertSprintLineItem(lineItem SprintLineItem, tx *sql.Tx) int {
 }
 
 func getSprintLineItem(sprintNameID int, engineerID int) SprintLineItem {
-	/*
-			SELECT
-		   current_availability,
-		   previous_availability,
-		   capacity,
-		   target_points,
-		   committed_points_this_sprint,
-		   completed_points_this_sprint,
-		   completed_points_last_sprint
-		FROM sprint_line_item
-		INNER JOIN workstream_sprint_engineer_sprint_line_item_map
-		ON workstream_sprint_engineer_sprint_line_item_map.engineer_id=1
-		AND workstream_sprint_engineer_sprint_line_item_map.sprint_id=1
-		AND workstream_sprint_engineer_sprint_line_item_map.sprint_line_item_id=sprint_line_item.id
-	*/
 	queryString := fmt.Sprintf(`
 		SELECT
 			current_availability,
@@ -329,51 +314,30 @@ func getPreviousSprintName(ID int) SprintName {
 
 func getWorkstreamOverview(ID int) []SprintSummary {
 	db := getDatabase()
+	sprintCountQuery := fmt.Sprintf(`
+		SELECT COUNT(DISTINCT(sprint_id)) as count
+		FROM %v
+		WHERE workstream_id=%v`,
+		workstreamSprintEngineerSprintLineItemMapTable, ID)
 
-	countQuery := fmt.Sprintf("SELECT COUNT(*) as count FROM %v WHERE workstreamId=%v", workstreamSprintNameSprintSummaryMapTable, ID)
-	count, _ := db.Query(countQuery)
-	queryString := fmt.Sprintf(
-		"SELECT %v.name, %v.id, %v.workingDays, %v.pointsCommitted, %v.pointsAchieved "+
-			"FROM %v "+
-			"INNER JOIN %v "+
-			"ON %v.workstreamId = %v "+
-			"INNER JOIN %v "+
-			"ON %v.id = %v.sprintSummaryId "+
-			"AND %v.sprintNameId = %v.id "+
-			"AND %v.sprintSummaryId = %v.id",
-		sprintNameTable, sprintNameTable, sprintSummaryTable, sprintSummaryTable, sprintSummaryTable,
-		sprintNameTable, workstreamSprintNameSprintSummaryMapTable,
-		workstreamSprintNameSprintSummaryMapTable, ID,
-		sprintSummaryTable,
-		sprintSummaryTable, workstreamSprintNameSprintSummaryMapTable,
+	// get the number of sprints, and create an array to hold the sprint summaries
+	countResult, _ := db.Query(sprintCountQuery)
+	sprintCount := checkCount(countResult)
 
-		workstreamSprintNameSprintSummaryMapTable, sprintNameTable,
-		workstreamSprintNameSprintSummaryMapTable, sprintSummaryTable,
-	)
+	summaries := make([]SprintSummary, sprintCount)
 
-	results, err := db.Query(queryString)
-	checkError(err)
-	resultCount := checkCount(count)
-	summaries := make([]SprintSummary, resultCount)
-	var sprintName string
-	var sprintID int
-	var workingDays int
-	var pointsCommitted int
-	var pointsAchieved int
-	counter := 0
-
-	for results.Next() {
-		results.Scan(&sprintName, &sprintID, &workingDays, &pointsCommitted, &pointsAchieved)
-		summaries[counter] = SprintSummary{
-			Name:            sprintName,
-			WorkstreamID:    ID,
-			SprintID:        sprintID,
-			WorkingDays:     workingDays,
-			PointsCommitted: pointsCommitted,
-			PointsAchieved:  pointsAchieved,
+	for i := range summaries {
+		summaries[i] = SprintSummary{
+			Name:                     "The Sprint Name",
+			WorkstreamID:             ID,
+			SprintID:                 i,
+			WorkingDays:              20,
+			PointsCommitted:          7 + i,
+			PointsAchieved:           9 + i,
+			TargetPercentageAchieved: 5,
+			Productivity:             70,
+			ProductivityChange:       2,
 		}
-
-		counter++
 	}
 	return summaries
 }

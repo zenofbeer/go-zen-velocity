@@ -46,7 +46,20 @@ func GetWorkstreamName(ID int) string {
 
 // GetWorkstreamOverview ...
 func GetWorkstreamOverview(ID int) WorkstreamOverview {
-	return getWorkstreamOverviewOld(ID)
+	summary := getWorkstreamOverview(ID)
+
+	retVal := WorkstreamOverview{
+		NameTitle:                     "Sprint",
+		WorkingDaysTitle:              "Working Days",
+		PointsCommittedTitle:          "Points Committed",
+		PointsAchievedTitle:           "Points Achieved",
+		TargetPercentageAchievedTitle: "Percentage of Target Achieved",
+		ProductivityTitle:             "Productivity",
+		ProductivityChangeTitle:       "Productivity Change",
+		SprintSummaries:               summary,
+	}
+
+	return retVal
 }
 
 // AddEngineerDetails add a new engineer. Velocity defaults to 0
