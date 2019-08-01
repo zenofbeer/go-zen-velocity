@@ -81,7 +81,7 @@ func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
 
 	if previousSprintName.ID == -1 {
 		sprintLineItem := SprintLineItem{
-			CurrentAvailability:       defaultAvailability,
+			CurrentAvailability:       10,
 			PreviousAvailability:      0,
 			Capacity:                  0,
 			TargetPoints:              0,
@@ -98,7 +98,7 @@ func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
 		// calculate new line item fields
 		// build SprintLineItem struct from calculated fields and engineer data
 		currentSprintLineItem := SprintLineItem{
-			CurrentAvailability:       defaultAvailability,
+			CurrentAvailability:       10,
 			PreviousAvailability:      previousSprintLineItem.CurrentAvailability,
 			Capacity:                  helpers.CalculateCapacityAsPercentage(10, previousSprintLineItem.CurrentAvailability),
 			TargetPoints:              helpers.CalculateTargetPoints(previousSprintLineItem.CompletedPointsThisSprint, defaultAvailability),

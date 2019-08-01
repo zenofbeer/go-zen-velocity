@@ -321,7 +321,7 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 			Name:                     sprintNames[i].Name,
 			WorkstreamID:             ID,
 			SprintID:                 i,
-			WorkingDays:              20,
+			WorkingDays:              getWorkingDays(ID, sprintNames[i].ID),
 			PointsCommitted:          7 + i,
 			PointsAchieved:           9 + i,
 			TargetPercentageAchieved: 5,
@@ -330,6 +330,23 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 		}
 	}
 	return sprintSummaries
+}
+
+func getWorkingDays(workStreamID int, sprintID int) int {
+	db := getDatabase()
+	defer db.Close()
+	queryString := `SELECT SUM(current_availability) FROM sprint_line_item
+		INNER JOIN workstream_sprint_engineer_sprint_line_item_map
+		ON workstream_sprint_engineer_sprint_line_item_map.workstream_id=1
+		AND workstream_sprint_engineer_sprint_line_item_map.sprint_id=2
+		AND workstream_sprint_engineer_sprint_line_item_map.sprint_line_item_id=sprint_line_item.id`
+	result, _ := db.Query(queryString)
+	var day int
+	for result.Next() {
+		err := result.Scan(&day)
+		checkError(err)
+	}
+	return day
 }
 
 func getSprintNamesByWorkstreamID(ID int) []SprintName {
