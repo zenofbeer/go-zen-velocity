@@ -313,12 +313,12 @@ func getPreviousSprintName(ID int) SprintName {
 }
 
 func getWorkstreamOverview(ID int) []SprintSummary {
-	sprintNames := getSprintNameByWorkstreamID(ID)
+	sprintNames := getSprintNamesByWorkstreamID(ID)
 	sprintSummaries := make([]SprintSummary, len(sprintNames))
 
 	for i := range sprintNames {
 		sprintSummaries[i] = SprintSummary{
-			Name:                     sprintNames[i],
+			Name:                     sprintNames[i].Name,
 			WorkstreamID:             ID,
 			SprintID:                 i,
 			WorkingDays:              20,
@@ -332,11 +332,11 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	return sprintSummaries
 }
 
-func getSprintNameByWorkstreamID(ID int) []string {
+func getSprintNamesByWorkstreamID(ID int) []SprintName {
 	db := getDatabase()
 	defer db.Close()
 	queryString := fmt.Sprintf(`
-	SELECT name
+	SELECT id, name
 	FROM %v
 	INNER JOIN %v
 	ON workstream_id=%v
@@ -351,12 +351,13 @@ func getSprintNameByWorkstreamID(ID int) []string {
 		sprintNameTable,
 		sprintNameTable)
 	result, _ := db.Query(queryString)
-	var names []string
+	var names []SprintName
 	for result.Next() {
+		var ID int
 		var name string
-		err := result.Scan(&name)
+		err := result.Scan(&ID, &name)
 		checkError(err)
-		names = append(names, name)
+		names = append(names, SprintName{ID, name})
 	}
 	return names
 }
