@@ -313,22 +313,12 @@ func getPreviousSprintName(ID int) SprintName {
 }
 
 func getWorkstreamOverview(ID int) []SprintSummary {
-	db := getDatabase()
-	sprintCountQuery := fmt.Sprintf(`
-		SELECT COUNT(DISTINCT(sprint_id)) as count
-		FROM %v
-		WHERE workstream_id=%v`,
-		workstreamSprintEngineerSprintLineItemMapTable, ID)
+	sprintNames := getSprintNameByWorkstreamID(ID)
+	sprintSummaries := make([]SprintSummary, len(sprintNames))
 
-	// get the number of sprints, and create an array to hold the sprint summaries
-	countResult, _ := db.Query(sprintCountQuery)
-	sprintCount := checkCount(countResult)
-
-	summaries := make([]SprintSummary, sprintCount)
-
-	for i := range summaries {
-		summaries[i] = SprintSummary{
-			Name:                     "The Sprint Name",
+	for i := range sprintNames {
+		sprintSummaries[i] = SprintSummary{
+			Name:                     sprintNames[i],
 			WorkstreamID:             ID,
 			SprintID:                 i,
 			WorkingDays:              20,
@@ -339,7 +329,36 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 			ProductivityChange:       2,
 		}
 	}
-	return summaries
+	return sprintSummaries
+}
+
+func getSprintNameByWorkstreamID(ID int) []string {
+	db := getDatabase()
+	defer db.Close()
+	queryString := fmt.Sprintf(`
+	SELECT name
+	FROM %v
+	INNER JOIN %v
+	ON workstream_id=%v
+	AND %v.sprint_id=%v.id
+	GROUP BY %v.name
+	ORDER BY %v.id`,
+		sprintNameTable,
+		workstreamSprintEngineerSprintLineItemMapTable,
+		ID,
+		workstreamSprintEngineerSprintLineItemMapTable,
+		sprintNameTable,
+		sprintNameTable,
+		sprintNameTable)
+	result, _ := db.Query(queryString)
+	var names []string
+	for result.Next() {
+		var name string
+		err := result.Scan(&name)
+		checkError(err)
+		names = append(names, name)
+	}
+	return names
 }
 
 func addWorkstreamSprintEngineerSprintLineItemMap(workstreamID int, sprintID int, engineerID int, sprintLineItemID int, tx *sql.Tx) {
