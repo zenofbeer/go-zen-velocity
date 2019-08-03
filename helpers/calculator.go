@@ -60,10 +60,11 @@ func CalculateProductivity(thisSprintCompleted int, workingDays int) float64 {
 	return retVal
 }
 
-// Calculate productivity change by previous from current
+// CalculateProductivityChange Calculate productivity change by previous from
+// current
 func CalculateProductivityChange(
 	currentProductivity float64, previousProductivity float64) float64 {
-		return currentProductivity = previousProductivity;
+	return currentProductivity - previousProductivity
 }
 
 // RoundToTwoDecimals utility function to round a float64 to two decimal points
