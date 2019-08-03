@@ -34,6 +34,15 @@ type WorkstreamViewModel struct {
 	Overview    data.WorkstreamOverview
 }
 
+// SprintDetailViewModel represents a sprint detail view
+type SprintDetailViewModel struct {
+	Head        HeadViewModel
+	Foot        FootViewModel
+	PageID      string
+	PageScript  string
+	DisplayName string
+}
+
 // WorkstreamName Model for displaying workstream names in dropdown lists
 type WorkstreamName struct {
 	ID   int
