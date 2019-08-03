@@ -324,6 +324,7 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	committedPoints := -1
 	completedPoints := -1
 	completedPointsLastSprint := -1
+	previousProductivity := float64(0)
 	var summaries []SprintSummary
 	for results.Next() {
 		err := results.Scan(
@@ -335,7 +336,11 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 			helpers.CalculatePercentageOfTargetAchieved(
 				completedPoints, completedPointsLastSprint)
 
-		productivity := helpers.CalculateProductivity(completedPoints, workingDays)
+		productivity := helpers.CalculateProductivity(
+			completedPoints, workingDays)
+
+		productivityChange := helpers.CalculateProductivityChange(
+			productivity, previousProductivity)
 
 		summaries = append(summaries,
 			SprintSummary{
@@ -345,8 +350,10 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 				PointsAchieved:           completedPoints,
 				TargetPercentageAchieved: percentageAchieved,
 				Productivity:             productivity,
-				ProductivityChange:       -1,
+				ProductivityChange:       productivityChange,
 			})
+		// update productivityLastSprint to be used with the next record.
+		previousProductivity = productivity
 	}
 	return summaries
 }

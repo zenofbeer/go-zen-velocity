@@ -17,9 +17,3 @@ ON sn.id=map.sprint_id
 
 GROUP BY map.workstream_id, map.sprint_id
 ORDER BY sn.id;
-
-
-select * from sprint_name
-where id = (select max(id)
-    from sprint_name
-    where id < 1)
