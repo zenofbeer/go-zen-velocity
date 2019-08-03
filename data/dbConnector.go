@@ -313,40 +313,32 @@ func getPreviousSprintName(ID int) SprintName {
 }
 
 func getWorkstreamOverview(ID int) []SprintSummary {
-	sprintNames := getSprintNamesByWorkstreamID(ID)
-	sprintSummaries := make([]SprintSummary, len(sprintNames))
-
-	for i := range sprintNames {
-		sprintSummaries[i] = SprintSummary{
-			Name:                     sprintNames[i].Name,
-			WorkstreamID:             ID,
-			SprintID:                 i,
-			WorkingDays:              getWorkingDays(ID, sprintNames[i].ID),
-			PointsCommitted:          7 + i,
-			PointsAchieved:           9 + i,
-			TargetPercentageAchieved: 5,
-			Productivity:             70,
-			ProductivityChange:       2,
-		}
-	}
-	return sprintSummaries
-}
-
-func getWorkingDays(workStreamID int, sprintID int) int {
 	db := getDatabase()
 	defer db.Close()
-	queryString := `SELECT SUM(current_availability) FROM sprint_line_item
-		INNER JOIN workstream_sprint_engineer_sprint_line_item_map
-		ON workstream_sprint_engineer_sprint_line_item_map.workstream_id=1
-		AND workstream_sprint_engineer_sprint_line_item_map.sprint_id=2
-		AND workstream_sprint_engineer_sprint_line_item_map.sprint_line_item_id=sprint_line_item.id`
-	result, _ := db.Query(queryString)
-	var day int
-	for result.Next() {
-		err := result.Scan(&day)
+	results, _ := db.Query("call spGetSprintSummary(?)", ID)
+	workstreamID := -1
+	name := ""
+	workingDays := -1
+	committedPoints := -1
+	completedPoints := -1
+	var summaries []SprintSummary
+	for results.Next() {
+		err := results.Scan(
+			&workstreamID, &name, &workingDays, &committedPoints,
+			&completedPoints)
 		checkError(err)
+		summaries = append(summaries,
+			SprintSummary{
+				Name:                     name,
+				WorkingDays:              workingDays,
+				PointsCommitted:          committedPoints,
+				PointsAchieved:           completedPoints,
+				TargetPercentageAchieved: -1,
+				Productivity:             -1,
+				ProductivityChange:       -1,
+			})
 	}
-	return day
+	return summaries
 }
 
 func getSprintNamesByWorkstreamID(ID int) []SprintName {
