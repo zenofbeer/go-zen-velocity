@@ -7,6 +7,8 @@ import (
 	"strconv"
 
 	"github.com/zenofbeer/go-zen-velocity/configuration"
+	"github.com/zenofbeer/go-zen-velocity/helpers"
+
 	// need to force import
 	_ "github.com/go-sql-driver/mysql"
 	//_ "github.com/mattn/go-sqlite3"
@@ -321,20 +323,28 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	workingDays := -1
 	committedPoints := -1
 	completedPoints := -1
+	completedPointsLastSprint := -1
 	var summaries []SprintSummary
 	for results.Next() {
 		err := results.Scan(
 			&workstreamID, &name, &workingDays, &committedPoints,
-			&completedPoints)
+			&completedPoints, &completedPointsLastSprint)
 		checkError(err)
+
+		percentageAchieved :=
+			helpers.CalculatePercentageOfTargetAchieved(
+				completedPoints, completedPointsLastSprint)
+
+		productivity := helpers.CalculateProductivity(completedPoints, workingDays)
+
 		summaries = append(summaries,
 			SprintSummary{
 				Name:                     name,
 				WorkingDays:              workingDays,
 				PointsCommitted:          committedPoints,
 				PointsAchieved:           completedPoints,
-				TargetPercentageAchieved: -1,
-				Productivity:             -1,
+				TargetPercentageAchieved: percentageAchieved,
+				Productivity:             productivity,
 				ProductivityChange:       -1,
 			})
 	}

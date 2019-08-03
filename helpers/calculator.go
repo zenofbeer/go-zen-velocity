@@ -35,6 +35,37 @@ func CalculateTargetPoints(lastCompletedPoints int, currentCapacity int) float64
 	return rawTarget + 1
 }
 
+// CalculatePercentageOfTargetAchieved the value of this sprint/last sprint.
+// returns 0 if last sprint is 0.
+func CalculatePercentageOfTargetAchieved(
+	thisSprintCompleted int, lastSprintCompleted int) float64 {
+	retVal := float64(0)
+	thisSprint := float64(thisSprintCompleted)
+	lastSprint := float64(lastSprintCompleted)
+	if retVal < lastSprint {
+		retVal = thisSprint / lastSprint
+	}
+	return retVal
+}
+
+// CalculateProductivity calculates the productivity score dividing points
+// completed by working days
+func CalculateProductivity(thisSprintCompleted int, workingDays int) float64 {
+	retVal := float64(0)
+	ts := float64(thisSprintCompleted)
+	wd := float64(workingDays)
+	if retVal < wd {
+		retVal = ts / wd
+	}
+	return retVal
+}
+
+// Calculate productivity change by previous from current
+func CalculateProductivityChange(
+	currentProductivity float64, previousProductivity float64) float64 {
+		return currentProductivity = previousProductivity;
+}
+
 // RoundToTwoDecimals utility function to round a float64 to two decimal points
 func RoundToTwoDecimals(value float64) float64 {
 	return math.Round(value*100) / 100
