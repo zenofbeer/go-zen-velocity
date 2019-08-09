@@ -56,18 +56,19 @@ type SprintLineItem struct {
 	CompletedPointsLastSprint int
 }
 
-type SprintDetailLineItem {
-	ID int
-	Engineer string
-	Availability int
-	PreviousAvailability int
-	Capacity int
-	TargetPoints float64
+// SprintDetailLineItem the sprint detail line item
+type SprintDetailLineItem struct {
+	ID                        int
+	Engineer                  string
+	Availability              int
+	PreviousAvailability      int
+	Capacity                  int
+	TargetPoints              float64
 	CommittedPointsThisSprint int
 	CommittedPointsLastSprint int
 	CompletedPointsLastSprint int
-	RunningVelocity int
-	LastSprintVelocity int
+	RunningVelocity           int
+	LastSprintVelocity        int
 }
 
 const workstreamNameTable string = "workstream_name"

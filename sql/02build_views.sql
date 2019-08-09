@@ -25,15 +25,21 @@ ORDER BY sn.id;
 */
 CREATE OR REPLACE VIEW vw_sprint_detail_line_items AS
 SELECT 
-    sn.name AS sprint_name,
+    sn.id AS sprint_id,
+    ws.id AS workstream_id,
     ed.first_name AS display_name,
     sli.current_availability AS current_availability,
-    sli.previous_availability AS previous_availability
+    sli.previous_availability AS previous_availability,
+    sli.capacity AS capacity,
+    sli.target_points AS target_points,
+    sli.committed_points_this_sprint AS committed_points
 FROM engineer_details ed
 INNER JOIN workstream_sprint_engineer_sprint_line_item_map map
 ON map.engineer_id=ed.id
 INNER JOIN sprint_line_item sli
 ON sli.id=map.sprint_line_item_id
+INNER JOIN workstream_name ws
+ON ws.id=map.workstream_id
 
 INNER JOIN sprint_name sn
 ON sn.id=map.sprint_id
