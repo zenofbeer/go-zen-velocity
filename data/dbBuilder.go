@@ -62,10 +62,13 @@ func buildWorkstreamNameTable(db *sql.DB, seed bool) {
 
 func buildSprintNameTable(db *sql.DB, seed bool) {
 	queryString := fmt.Sprintf(
-		`CREATE TABLE IF NOT EXISTS %v 
-		(id INT(10) NOT NULL AUTO_INCREMENT, 
-		name VARCHAR(128) NOT NULL UNIQUE, 
-		PRIMARY KEY (id)) ENGINE=InnoDB;`,
+		`CREATE TABLE IF NOT EXISTS %v(
+		id INT(11) NOT NULL AUTO_INCREMENT,
+		name VARCHAR(128) NOT NULL UNIQUE,
+		start_date DATE NOT NULL,
+		end_date DATE NOT NULL,
+		PRIMARY KEY(id)
+		) ENGINE=InnoDB;`,
 		sprintNameTable)
 
 	query, err := db.Prepare(queryString)
@@ -151,9 +154,9 @@ func seedWorkstreamNameTable() {
 }
 
 func seedSprintNameTable() {
-	AddSprintName("2019.06.20")
-	AddSprintName("2019.07.04")
-	AddSprintName("2019.07.17")
+	AddSprintName("2019.06.20", "2019-06-20", "2019-07-03")
+	AddSprintName("2019.07.04", "2019-07-04", "2019-07-17")
+	AddSprintName("2019.07.18", "2019-07-18", "2019-07-31")
 }
 
 func seedWorkstreamSprintNameSprintSummaryMapTable(db *sql.DB) {

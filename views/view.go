@@ -36,11 +36,11 @@ type WorkstreamViewModel struct {
 
 // SprintDetailViewModel represents a sprint detail view
 type SprintDetailViewModel struct {
-	Head        HeadViewModel
-	Foot        FootViewModel
-	PageID      string
-	PageScript  string
-	DisplayName string
+	Head       HeadViewModel
+	Foot       FootViewModel
+	PageID     string
+	PageScript string
+	Detail     data.SprintDetail
 }
 
 // WorkstreamName Model for displaying workstream names in dropdown lists

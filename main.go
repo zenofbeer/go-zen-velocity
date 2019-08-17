@@ -22,7 +22,8 @@ func newRouter() *mux.Router {
 	r.HandleFunc("/velocity", handler).Methods("GET")
 	r.HandleFunc("/velocity/workstreamNames", getWorkstreamNameList).Methods("POST")
 	r.HandleFunc("/velocity/workstreamHome/{id:[0-9]+}", getWorkstreamHome).Methods("GET")
-	r.HandleFunc("/velocity/workstreamHome/{id:[0-9]+}/sprint/{id:[0-9]+}", sprintDetailHandler).Methods("GET")
+	r.HandleFunc(
+		"/velocity/workstreamHome/{workstreamID:[0-9]+}/sprint/{sprintID:[0-9]+}", sprintDetailHandler).Methods("GET")
 
 	staticFileDirectory := http.Dir("./resources/")
 	staticFileHandler := http.StripPrefix("/resources/", http.FileServer(staticFileDirectory))
@@ -70,7 +71,13 @@ func sprintDetailHandler(w http.ResponseWriter, r *http.Request) {
 			"./resources/templates/foot.html",
 			"./resources/templates/sprintDetail.html"))
 
-	err := templates.ExecuteTemplate(w, "layout", nil)
+	params := mux.Vars(r)
+	workstreamID, _ := strconv.Atoi(params["workstreamID"])
+	sprintID, _ := strconv.Atoi(params["sprintID"])
+
+	data := controllers.GetSprintDetailViewModel(workstreamID, sprintID)
+
+	err := templates.ExecuteTemplate(w, "layout", data)
 	if err != nil {
 		fmt.Println(err)
 	}

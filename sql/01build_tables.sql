@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS engineer_details(
 CREATE TABLE IF NOT EXISTS sprint(
     id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(128) NOT NULL UNIQUE,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 

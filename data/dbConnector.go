@@ -56,23 +56,8 @@ type SprintLineItem struct {
 	CompletedPointsLastSprint int
 }
 
-// SprintDetailLineItem the sprint detail line item
-type SprintDetailLineItem struct {
-	ID                        int
-	Engineer                  string
-	Availability              int
-	PreviousAvailability      int
-	Capacity                  int
-	TargetPoints              float64
-	CommittedPointsThisSprint int
-	CommittedPointsLastSprint int
-	CompletedPointsLastSprint int
-	RunningVelocity           int
-	LastSprintVelocity        int
-}
-
 const workstreamNameTable string = "workstream_name"
-const sprintNameTable string = "sprint_name"
+const sprintNameTable string = "sprint"
 const sprintSummaryTable string = "sprint_summary"
 const workstreamSprintNameSprintSummaryMapTable string = "workstream_sprintname_sprintsummary_map"
 const engineerDetailsTable string = "engineer_details"
@@ -139,6 +124,36 @@ func getWorkstreamNameByID(ID int) string {
 	return name
 }
 
+func getSprintDetail(workstreamID int, sprintID int) SprintDetail {
+	retVal := getSprintNameDuration(sprintID)
+
+	return retVal
+}
+
+func getSprintNameDuration(sprintID int) SprintDetail {
+	db := getDatabase()
+	defer db.Close()
+	queryString := fmt.Sprintf(`SELECT * FROM %v WHERE id=%v`,
+		sprintNameTable, sprintID)
+	row, _ := db.Query(queryString)
+	defer row.Close()
+	var ID int
+	var name string
+	var startDate string
+	var endDate string
+	for row.Next() {
+		row.Scan(&ID, &name, &startDate, &endDate)
+	}
+	retVal := SprintDetail{
+		ID:        ID,
+		Name:      name,
+		StartDate: startDate,
+		EndDate:   endDate,
+	}
+	row.Close()
+	return retVal
+}
+
 func addEngineerDetails(firstName string, lastName string, emailAddress string) {
 	db := getDatabase()
 	queryString := fmt.Sprintf(
@@ -183,17 +198,17 @@ func getEngineerDetails(engineerID int) EngineerDetails {
 	return retVal
 }
 
-func addSprintName(name string) {
+func addSprintName(name string, startDate string, endDate string) {
 	queryString := fmt.Sprintf(`
-		INSERT INTO %v (name) 
-		VALUES (?)`,
+		INSERT INTO %v (name, start_date, end_date) 
+		VALUES (?, ?, ?)`,
 		sprintNameTable)
 
 	db := getDatabase()
 
 	query, err := db.Prepare(queryString)
 	checkError(err)
-	query.Exec(name)
+	query.Exec(name, startDate, endDate)
 
 	db.Close()
 }
@@ -334,6 +349,7 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	defer db.Close()
 	results, _ := db.Query("call spGetSprintSummary(?)", ID)
 	workstreamID := -1
+	sprintID := -1
 	name := ""
 	workingDays := -1
 	committedPoints := -1
@@ -343,7 +359,7 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 	var summaries []SprintSummary
 	for results.Next() {
 		err := results.Scan(
-			&workstreamID, &name, &workingDays, &committedPoints,
+			&workstreamID, &sprintID, &name, &workingDays, &committedPoints,
 			&completedPoints, &completedPointsLastSprint)
 		checkError(err)
 
@@ -359,6 +375,8 @@ func getWorkstreamOverview(ID int) []SprintSummary {
 
 		summaries = append(summaries,
 			SprintSummary{
+				WorkstreamID:             workstreamID,
+				SprintID:                 sprintID,
 				Name:                     name,
 				WorkingDays:              workingDays,
 				PointsCommitted:          committedPoints,
@@ -403,6 +421,7 @@ func getSprintNamesByWorkstreamID(ID int) []SprintName {
 	return names
 }
 
+// ToDo: get rid of the test statements.
 func addWorkstreamSprintEngineerSprintLineItemMap(workstreamID int, sprintID int, engineerID int, sprintLineItemID int, tx *sql.Tx) {
 	queryString := fmt.Sprintf(
 		`INSERT INTO %v (

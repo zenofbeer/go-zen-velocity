@@ -14,6 +14,8 @@
     },
     "Sprint" : {
         "VelocityIncreaseGoalConstant" : 5,
-        "DefaultAvailability" : 10
+        "DefaultAvailability" : 10,
+        "PageScript" : "/resources/scripts/sprintDetail.js",
+        "PageID" : "sprint_detail"
     }
 }

@@ -22,6 +22,15 @@ type WorkstreamOverview struct {
 	SprintSummaries               []SprintSummary
 }
 
+// SprintDetail the detail view of the sprint
+type SprintDetail struct {
+	ID              int
+	Name            string
+	StartDate       string
+	EndDate         string
+	SprintLineItems []SprintLineItem
+}
+
 // WorkstreamNameList a list of WorkstreamName
 type WorkstreamNameList struct {
 	ListTitle       string
@@ -62,14 +71,20 @@ func GetWorkstreamOverview(ID int) WorkstreamOverview {
 	return retVal
 }
 
+// GetSprintDetail get the sprint details
+func GetSprintDetail(workstreamID int, sprintID int) SprintDetail {
+	retVal := getSprintDetail(workstreamID, sprintID)
+	return retVal
+}
+
 // AddEngineerDetails add a new engineer. Velocity defaults to 0
 func AddEngineerDetails(firstName string, lastName string, emailAddress string) {
 	addEngineerDetails(firstName, lastName, emailAddress)
 }
 
 // AddSprintName add a new sprint
-func AddSprintName(name string) {
-	addSprintName(name)
+func AddSprintName(name string, startDate string, endDate string) {
+	addSprintName(name, startDate, endDate)
 }
 
 // AddSprint add a new sprint to a workstream. A sprint requires a mapping between a workstream,
@@ -111,6 +126,7 @@ func AddSprint(workstreamID int, currentSprintNameID int, engineerID int) {
 	}
 }
 
+// ToDo: verify that this is no longer used, and delete dead code.
 func getWorkstreamOverviewOld(ID int) WorkstreamOverview {
 	summary := getWorkstreamOverview(ID)
 

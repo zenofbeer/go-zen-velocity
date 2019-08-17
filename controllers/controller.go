@@ -30,6 +30,19 @@ func GetWorkstreamViewModel(ID int) views.WorkstreamViewModel {
 	return retVal
 }
 
+// GetSprintDetailViewModel get the view model for the sprint detail by
+// workstreamID and sprintID
+func GetSprintDetailViewModel(
+	workstreamID int, sprintID int) views.SprintDetailViewModel {
+	retVal := views.SprintDetailViewModel{
+		Head:   getHeadViewModel(),
+		Foot:   getFootViewModel(config.SprintSettings.PageScript),
+		PageID: config.SprintSettings.PageID,
+		Detail: data.GetSprintDetail(workstreamID, sprintID),
+	}
+	return retVal
+}
+
 // GetworkstreamNames return a json object containing workstream
 // names and IDs
 func GetworkstreamNames() ([]byte, error) {

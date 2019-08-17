@@ -27,6 +27,8 @@ type AppSettings struct {
 type Sprint struct {
 	VelocityIncreaseGoalConstant int
 	DefaultAvailability          int
+	PageScript                   string
+	PageID                       string
 }
 
 // HomeSettings settings for the home page
