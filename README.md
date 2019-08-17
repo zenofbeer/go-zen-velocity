@@ -12,6 +12,10 @@
 
 
 # Changelog
+## [0.1.0-PRE-ALPHA] - 2019.08.17
+- pull live data for workstream search
+- pull live data for sprint summary view
+- pull live data to display sprint name, start date, and end date on the sprint detail view.
 ## [0.0.0-PRE-ALPHA] - 2019.07.16
 - Migrate to mysql
 ## [0.0.0-PRE-ALPHA] - 2019.07.15
