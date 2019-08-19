@@ -5,7 +5,23 @@
     <h2>Start Date: {{.StartDate}}</h2>
     <h2>End Date: {{.EndDate}}</h2>
     <h3>Velocity Increase Goal Constant: 5%</h3>
+    <table border="">
+        <tr>
+            <th>{{.EngineerHeader}}</th>
+            <th>{{.AvailabilityThisSprintHeader}}</th>
+            <th>{{.AvailabilityLastSprintHeader}}</th>
+            <th>{{.CapacityByAvailabilityHeader}}</th>
+            <th>{{.TargetPointsHeader}}</th>
+            <th>{{.CommittedPointsThisSprintHeader}}</th>
+            <th>{{.CommittedPointsLastSprintHeader}}</th>
+            <th>{{.CompletedPointsLastSprintHeader}}</th>
+            <th>{{.RunningVelocityHeader}}</th>
+            <th>{{.LastSprintVelocityHeader}}</th>
+        </tr>
+    </table>
     {{end}}
+
+
     <table border="">
         <tr>
             <th>Engineer</th>

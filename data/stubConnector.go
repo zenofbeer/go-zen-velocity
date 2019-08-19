@@ -24,11 +24,21 @@ type WorkstreamOverview struct {
 
 // SprintDetail the detail view of the sprint
 type SprintDetail struct {
-	ID              int
-	Name            string
-	StartDate       string
-	EndDate         string
-	SprintLineItems []SprintLineItem
+	ID                              int
+	Name                            string
+	StartDate                       string
+	EndDate                         string
+	EngineerHeader                  string
+	AvailabilityThisSprintHeader    string
+	AvailabilityLastSprintHeader    string
+	CapacityByAvailabilityHeader    string
+	TargetPointsHeader              string
+	CommittedPointsThisSprintHeader string
+	CommittedPointsLastSprintHeader string
+	CompletedPointsLastSprintHeader string
+	RunningVelocityHeader           string
+	LastSprintVelocityHeader        string
+	SprintLineItems                 []SprintLineItem
 }
 
 // WorkstreamNameList a list of WorkstreamName
@@ -74,6 +84,16 @@ func GetWorkstreamOverview(ID int) WorkstreamOverview {
 // GetSprintDetail get the sprint details
 func GetSprintDetail(workstreamID int, sprintID int) SprintDetail {
 	retVal := getSprintDetail(workstreamID, sprintID)
+	retVal.EngineerHeader = "Engineer"
+	retVal.AvailabilityThisSprintHeader = "Availability This Sprint"
+	retVal.AvailabilityLastSprintHeader = "Availability Last Sprint"
+	retVal.CapacityByAvailabilityHeader = "Capacity By Availability"
+	retVal.TargetPointsHeader = "Target Points"
+	retVal.CommittedPointsThisSprintHeader = "Committed Points This Sprint"
+	retVal.CommittedPointsLastSprintHeader = "Committed Points Last Sprint"
+	retVal.CompletedPointsLastSprintHeader = "Completed Points Last Sprint"
+	retVal.RunningVelocityHeader = "Running Velocity"
+	retVal.LastSprintVelocityHeader = "Last Sprint Velocity"
 	return retVal
 }
 
