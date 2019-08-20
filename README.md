@@ -12,6 +12,8 @@
 
 
 # Changelog
+## [0.1.0-PRE-ALPHA] - 2009.08.18
+- Complete the sprint detail page headers.
 ## [0.1.0-PRE-ALPHA] - 2019.08.17
 - pull live data for workstream search
 - pull live data for sprint summary view

@@ -24,21 +24,29 @@ type WorkstreamOverview struct {
 
 // SprintDetail the detail view of the sprint
 type SprintDetail struct {
-	ID                              int
-	Name                            string
-	StartDate                       string
-	EndDate                         string
-	EngineerHeader                  string
-	AvailabilityThisSprintHeader    string
-	AvailabilityLastSprintHeader    string
-	CapacityByAvailabilityHeader    string
-	TargetPointsHeader              string
-	CommittedPointsThisSprintHeader string
-	CommittedPointsLastSprintHeader string
-	CompletedPointsLastSprintHeader string
-	RunningVelocityHeader           string
-	LastSprintVelocityHeader        string
-	SprintLineItems                 []SprintLineItem
+	ID                                   int
+	Name                                 string
+	StartDate                            string
+	EndDate                              string
+	EngineerHeader                       string
+	AvailabilityThisSprintHeader         string
+	AvailabilityLastSprintHeader         string
+	CapacityByAvailabilityHeader         string
+	TargetPointsHeader                   string
+	CommittedPointsThisSprintHeader      string
+	CommittedPointsLastSprintHeader      string
+	CompletedPointsLastSprintHeader      string
+	RunningVelocityHeader                string
+	LastSprintVelocityHeader             string
+	TotalDaysAvailableHeader             string
+	TotalDaysAvailableLastSprintHeader   string
+	TotalCapacityByAvailabilityHeader    string
+	TotalTargetPointsHeader              string
+	TotalCommittedPointsHeader           string
+	TotalCompletedPointsHeader           string
+	TotalPointsCompletedLastSprintHeader string
+	TotalsLineTitle                      string
+	SprintLineItems                      []SprintLineItem
 }
 
 // WorkstreamNameList a list of WorkstreamName
@@ -94,6 +102,16 @@ func GetSprintDetail(workstreamID int, sprintID int) SprintDetail {
 	retVal.CompletedPointsLastSprintHeader = "Completed Points Last Sprint"
 	retVal.RunningVelocityHeader = "Running Velocity"
 	retVal.LastSprintVelocityHeader = "Last Sprint Velocity"
+	retVal.TotalDaysAvailableHeader = "Total Days Available"
+	retVal.TotalDaysAvailableLastSprintHeader =
+		"Total Days Available Last Sprint"
+	retVal.TotalCapacityByAvailabilityHeader =
+		"Total Capacity By Availability"
+	retVal.TotalTargetPointsHeader = "Total Target Points"
+	retVal.TotalCommittedPointsHeader = "Committed Points"
+	retVal.TotalCompletedPointsHeader = "Completed Points"
+	retVal.TotalPointsCompletedLastSprintHeader = "Points Completed Last Sprint"
+	retVal.TotalsLineTitle = "Totals"
 	return retVal
 }
 
