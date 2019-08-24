@@ -46,6 +46,7 @@ type EngineerDetails struct {
 
 // SprintLineItem represents an engineer level line item in a sprint
 type SprintLineItem struct {
+	Name                      string
 	id                        int
 	CurrentAvailability       int
 	PreviousAvailability      int
@@ -126,7 +127,26 @@ func getWorkstreamNameByID(ID int) string {
 
 func getSprintDetail(workstreamID int, sprintID int) SprintDetail {
 	retVal := getSprintNameDuration(sprintID)
+	retVal.SprintLineItems = getSprintLineItems(workstreamID, sprintID)
 
+	return retVal
+}
+
+func getSprintLineItems(workstreamID int, sprintID int) []SprintLineItem {
+	db := getDatabase()
+	defer db.Close()
+	results, _ := db.Query(
+		"call spGetSprintLineItems(?, ?)", workstreamID, sprintID)
+	var name string
+	var retVal []SprintLineItem
+	for results.Next() {
+		err := results.Scan(&name)
+		checkError(err)
+
+		retVal = append(retVal, SprintLineItem{
+			Name: name,
+		})
+	}
 	return retVal
 }
 
