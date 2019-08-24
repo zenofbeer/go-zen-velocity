@@ -25,11 +25,12 @@ ORDER BY sn.id;
 /*
     name: vw_sprint_detail_line_items
     description: engineer detail on a sprint detail line item.
-    version: 0.0.1
+    version: 1.0.0 - rename sprint_name table to sprint, and adjust view to
+        account for the name change.
 */
 CREATE OR REPLACE VIEW vw_sprint_detail_line_items AS
 SELECT 
-    sn.id AS sprint_id,
+    s.id AS sprint_id,
     ws.id AS workstream_id,
     ed.first_name AS display_name,
     sli.current_availability AS current_availability,
@@ -45,5 +46,5 @@ ON sli.id=map.sprint_line_item_id
 INNER JOIN workstream_name ws
 ON ws.id=map.workstream_id
 
-INNER JOIN sprint_name sn
-ON sn.id=map.sprint_id;
+INNER JOIN sprint s
+ON s.id=map.sprint_id;

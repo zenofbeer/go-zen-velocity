@@ -138,13 +138,25 @@ func getSprintLineItems(workstreamID int, sprintID int) []SprintLineItem {
 	results, _ := db.Query(
 		"call spGetSprintLineItems(?, ?)", workstreamID, sprintID)
 	var name string
+	var availability int
+	var previousAvailability int
+	var capacity int
+	var targetPoints float64
+	var committedPoints int
 	var retVal []SprintLineItem
 	for results.Next() {
-		err := results.Scan(&name)
+		err := results.Scan(
+			&name, &availability, &previousAvailability, &capacity,
+			&targetPoints, &committedPoints)
 		checkError(err)
 
 		retVal = append(retVal, SprintLineItem{
-			Name: name,
+			Name:                      name,
+			CurrentAvailability:       availability,
+			PreviousAvailability:      previousAvailability,
+			Capacity:                  capacity,
+			TargetPoints:              targetPoints,
+			CommittedPointsThisSprint: committedPoints,
 		})
 	}
 	return retVal

@@ -15,7 +15,7 @@ END;
 /*
     name:           spGetSprintLineItems
     description:    returns sprint line items by workstreamID and sprintID
-    version:        0.0.1
+    version:        0.1.1 - extend to get current availability
 */
 DROP PROCEDURE IF EXISTS spGetSprintLineItems;
 
@@ -23,10 +23,14 @@ CREATE PROCEDURE spGetSprintLineItems(
     workstreamID INT,
     sprintID INT)
 BEGIN
-    SELECT ed.first_name as name
-    FROM engineer_details ed
-    INNER JOIN workstream_sprint_engineer_sprint_line_item_map map
-    ON map.workstream_id=workstreamID
-    AND map.sprint_id=sprintID
-    AND map.engineer_id=ed.id;
+    SELECT 
+        display_name, 
+        current_availability,
+        previous_availability,
+        capacity,
+        target_points,
+        committed_points
+    FROM vw_sprint_detail_line_items
+    WHERE workstream_id=workstreamID
+    AND sprint_id=sprintID;
 END;

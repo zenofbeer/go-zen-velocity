@@ -21,6 +21,11 @@
         {{range .SprintLineItems}}
         <tr>
             <td>{{.Name}}</td>
+            <td>{{.CurrentAvailability}}</td>
+            <td>{{.PreviousAvailability}}</td>
+            <td>{{.Capacity}}</td>
+            <td>{{.TargetPoints}}</td>
+            <td>{{.CommittedPointsThisSprint}}</td>
         </tr>
         {{end}}
     </table>
